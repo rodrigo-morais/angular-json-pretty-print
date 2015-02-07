@@ -11,6 +11,7 @@ performance/temp*.html
 angular.js.tmproj
 /node_modules/
 bower_components/
+vendor/
 angular.xcodeproj
 .idea
 *.iml

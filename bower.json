@@ -1,0 +1,30 @@
+{
+  "name": "angular-json-pretty-print",
+  "version": "0.0.1",
+  "homepage": "",
+  "authors": [
+    "Rodrigo Morais"
+  ],
+  "description": "Angular component to print in pretty way a JSON object and can navigate in it.",
+  "main": "./dist/angular-json-pretty-print.js",
+  "keywords": [
+    "AngularJS",
+    "Angular",
+    "JSON",
+    "pretty",
+    "print"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "component",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "Gruntfile.js"
+  ],
+  "devDependencies": {
+    "angularjs": "*",
+    "angular-mocks": "~1.4.0"
+  }
+}
