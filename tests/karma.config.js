@@ -22,6 +22,7 @@ module.exports = function(config) {
             bower + 'angular/angular.js',
             bower + 'angular-mocks/angular-mocks.js',
             'component/**/*.js',
+            'component/**/*.html',
             'tests/unit/**/*.js'
         ],
         // testing framework to use (jasmine/mocha/qunit/...)
@@ -33,13 +34,18 @@ module.exports = function(config) {
         port: 8999,
         // Continuous Integration mode
         // if true, it capture browsers, run tests and exit
-        singleRun: true,
+        singleRun: false,
         reporters: ['progress', 'coverage'],
         // preprocessors
         preprocessors: {
-            'component/**/*.js': ['coverage']
+            'component/**/*.js': ['coverage'],
+            '**/*.html': ['ng-html2js']
         },
-        // configure the reporter
+        ngHtml2JsPreprocessor: {
+            moduleName: 'templates',
+            stripPrefix: 'component/'
+        },
+            // configure the reporter
         coverageReporter: {
             type : 'lcov',
             dir : 'coverage/'

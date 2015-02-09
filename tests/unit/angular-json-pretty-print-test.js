@@ -3,6 +3,7 @@ describe('Unit test to print JSON object in pretty way', function() {
       $rootScope;
 
   beforeEach(module('JsonPrettyPrint'));
+  beforeEach(module('templates'));
 
   beforeEach(inject(function(_$compile_, _$rootScope_){
     $compile = _$compile_;
@@ -10,7 +11,7 @@ describe('Unit test to print JSON object in pretty way', function() {
   }));
 
   it('Get the result of JSON object', function() {
-    var element = $compile("<json-pretty-print></json-pretty-print>")($rootScope);
+    var element = $compile("<rm-json-pretty-print></rm-json-pretty-print>")($rootScope);
     
     $rootScope.$digest();
     
