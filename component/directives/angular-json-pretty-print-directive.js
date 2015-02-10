@@ -9,8 +9,11 @@ function rmJsonPrettyPrintDirective() {
         restrict: 'E',
         templateUrl: html,
         replace: true,
+        scope: {
+            json: '='
+        },
         link: function (scope, element, attrs, controller) {
-            
+            scope.jsonPretty = scope.json;
         }
     };
 
