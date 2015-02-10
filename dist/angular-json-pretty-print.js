@@ -3,7 +3,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
   'use strict';
 
   $templateCache.put('component/templates/jsonPrettyPrint.html',
-    "<div>{\"key1\":\"value1\"}</div>"
+    "<div>{{jsonPretty}}</div>"
   );
 
 }]);
@@ -16,11 +16,14 @@ function rmJsonPrettyPrintDirective() {
     var html = 'component/templates/jsonPrettyPrint.html';
 
     return {
-        restrict: 'E',
+        restrict: 'EA',
         templateUrl: html,
         replace: true,
         link: function (scope, element, attrs, controller) {
-            
+            scope.jsonPretty = scope.value;
+            attrs.$observe("json", function (newValue) {
+                scope.jsonPretty = newValue;
+            });
         }
     };
 

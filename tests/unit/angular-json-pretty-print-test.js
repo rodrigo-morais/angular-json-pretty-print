@@ -10,10 +10,10 @@ describe('Unit test to print JSON object in pretty way', function() {
   }));
 
   it('Get the result of JSON object', function() {
-    var element = $compile("<rm-json-pretty-print></rm-json-pretty-print>")($rootScope);
+    var element = $compile("<rm-json-pretty-print json='{\"key2\":\"value2\"}'></rm-json-pretty-print>")($rootScope);
     
     $rootScope.$digest();
     
-    expect(element.html()).toEqual('{"key1":"value1"}');
+    expect(element.html()).toEqual('{"key2":"value2"}');
   });
 });
