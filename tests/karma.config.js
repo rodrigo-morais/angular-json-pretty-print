@@ -21,9 +21,11 @@ module.exports = function(config) {
         files: [
             bower + 'angular/angular.js',
             bower + 'angular-mocks/angular-mocks.js',
-            'component/**/*.js',
-            'component/**/*.html',
+            'dist/angular-json-pretty-print.js',
             'tests/unit/**/*.js'
+        ],
+        exclude: [
+            'component/templates/templates.js'
         ],
         // testing framework to use (jasmine/mocha/qunit/...)
         frameworks: ['jasmine'],
@@ -38,12 +40,7 @@ module.exports = function(config) {
         reporters: ['progress', 'coverage'],
         // preprocessors
         preprocessors: {
-            'component/**/*.js': ['coverage'],
-            '**/*.html': ['ng-html2js']
-        },
-        ngHtml2JsPreprocessor: {
-            moduleName: 'templates',
-            stripPrefix: 'component/'
+            'component/**/*.js': ['coverage']
         },
             // configure the reporter
         coverageReporter: {
