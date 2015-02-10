@@ -9,11 +9,21 @@ describe('Unit test to print JSON object in pretty way', function() {
     $rootScope = _$rootScope_;
   }));
 
-  it('Get the result of JSON object', function() {
-    var element = $compile("<rm-json-pretty-print json='{\"key2\":\"value2\"}'></rm-json-pretty-print>")($rootScope);
+  it('Verify if brace to create JSON object is exhibited', function() {
+    var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
+        jsonReturn = '<span class="ng-binding">{</span>';
     
     $rootScope.$digest();
     
-    expect(element.html()).toEqual('{"key2":"value2"}');
+    expect(element.html()).toContain(jsonReturn);
+  });
+
+  it('Verify if brace to close JSON object is exhibited', function() {
+    var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
+        jsonReturn = '<span class="ng-binding">}</span>';
+    
+    $rootScope.$digest();
+    
+    expect(element.html()).toContain(jsonReturn);
   });
 });
