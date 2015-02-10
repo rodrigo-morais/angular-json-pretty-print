@@ -61,7 +61,7 @@ module.exports = function (grunt) {
         },
         watch: {
             files: ['component/angular-json-pretty-print.js', 'component/**/*.js',
-                    'component/**/*.html'],
+                    'component/**/*.html', 'tests/unit/**/*.js'],
             tasks: ['jshint', 'ngtemplates', 'concat', 'karma:unit:run', 'uglify', 'copy:main', 'copy:dummy']
         }
     });
