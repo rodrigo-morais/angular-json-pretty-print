@@ -4,9 +4,21 @@ module.exports = function (grunt) {
         jshint: {
           all: ['component/**/*.js', 'tests/unit/**/*.js']
         },
+        ngtemplates:  {
+            options: {
+                module: 'JsonPrettyPrint'
+            },
+            app:  {
+                src:      'component/templates/**.html',
+                dest:     'component/templates/templates.js'
+            }
+        },
         concat: {
             app: {
-                src: ['component/angular-json-pretty-print.js', 'component/**/*.js'],
+                src: [  'component/angular-json-pretty-print.js',
+                        '<%= ngtemplates.app.dest %>',
+                        'component/**/*.js'
+                    ],
                 dest: 'dist/angular-json-pretty-print.js',
             }
         },
@@ -30,6 +42,12 @@ module.exports = function (grunt) {
             flatten: true,
             filter: 'isFile'
           },
+          dummy: {
+            cwd: './dist/',
+            src: '**',
+            dest: 'tests/dummy/vendor/angular-json-pretty-print',
+            expand: true
+          }
         },
         karma: {
           unit: {
@@ -44,7 +62,7 @@ module.exports = function (grunt) {
         watch: {
             files: ['component/angular-json-pretty-print.js', 'component/**/*.js',
                     'component/**/*.html'],
-            tasks: ['karma:unit:run', 'jshint', 'concat', 'uglify', 'copy']
+            tasks: ['jshint', 'ngtemplates', 'concat', 'karma:unit:run', 'uglify', 'copy:main', 'copy:dummy']
         }
     });
 
@@ -54,6 +72,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-angular-templates');
     grunt.registerTask('default', 'watch');
     grunt.registerTask('all', ['concat']);
 };
