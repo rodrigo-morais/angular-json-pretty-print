@@ -16,14 +16,14 @@ function rmJsonPrettyPrintDirective() {
     var html = 'component/templates/jsonPrettyPrint.html';
 
     return {
-        restrict: 'E',
+        restrict: 'EA',
         templateUrl: html,
         replace: true,
-        scope: {
-            json: '='
-        },
         link: function (scope, element, attrs, controller) {
-            scope.jsonPretty = scope.json;
+            scope.jsonPretty = scope.value;
+            attrs.$observe("json", function (newValue) {
+                scope.jsonPretty = newValue;
+            });
         }
     };
 
