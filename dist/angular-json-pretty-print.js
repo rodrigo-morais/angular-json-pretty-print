@@ -5,7 +5,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
   $templateCache.put('component/templates/jsonPrettyPrint.html',
     "<code>\n" +
     "    <div class=\"json-treeview\" data-ng:repeat=\"line in jsonPretty\">\n" +
-    "        <span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\">{{object.element}}</span>\n" +
+    "        <i data-ng:repeat=\"object in line.elements\" class=\"fa fa-minus-square-o {{object.class}}\" id=\"{{object.id}}\" class=\"fa fa-minus-square-o plus-icon\" data-ng:if=\"object.isPlusIcon\"></i>\n" +
+    "        <span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isPlusIcon == false\">{{object.element}}</span>\n" +
     "    </div>\n" +
     "</code>"
   );
@@ -26,7 +27,17 @@ function rmJsonPrettyPrintDirective() {
             jsonObject = {},
             plusId = 0;
 
+        jsonObject.id = 'plus_' + plusId;
+        jsonObject.isPlusIcon = true;
+        jsonObject.isBlank = false;
+        jsonObject.element = '';
+        jsonObject.style = '';
+        jsonObject.class = 'plus-icon';
+        jsonLine.elements.push(jsonObject);
         
+        jsonObject = {};
+        jsonObject.id = '';
+        jsonObject.isPlusIcon = false;
         jsonObject.isBlank = false;
         jsonObject.element = '{';
         jsonObject.style = '';
@@ -39,6 +50,8 @@ function rmJsonPrettyPrintDirective() {
             lines: []
         };
         jsonObject = {};
+        jsonObject.id = '';
+        jsonObject.isPlusIcon = false;
         jsonObject.isBlank = false;
         jsonObject.element = '}';
         jsonObject.style = '';

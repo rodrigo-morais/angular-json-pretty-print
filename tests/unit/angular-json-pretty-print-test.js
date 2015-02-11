@@ -11,7 +11,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if brace to create JSON object is exhibited', function() {
     var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
-        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace">{</span>';
+        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false">{</span>';
     
     $rootScope.$digest();
     
@@ -20,7 +20,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if brace to close JSON object is exhibited', function() {
     var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
-        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace">}</span>';
+        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false">}</span>';
     
     $rootScope.$digest();
     
@@ -43,6 +43,22 @@ describe('Unit test to print JSON object in pretty way', function() {
     $(element).find('.json-treeview').each(function(index, line){
       expect($(line).hasClass('json-treeview')).toBe(true);
     });
+  });
+
+  it('Verify if there is a icon before open brace', function() {
+    var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope);
+    
+    $rootScope.$digest();
+    
+    expect($(element).find('.json-treeview').first().children()[0].tagName).toBe('I');
+  });
+
+  it('Verify the class in icon before open brace', function() {
+    var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope);
+    
+    $rootScope.$digest();
+    
+    expect($($(element).find('.json-treeview').first().children()[0]).hasClass('plus-icon')).toBe(true);
   });
   
 });

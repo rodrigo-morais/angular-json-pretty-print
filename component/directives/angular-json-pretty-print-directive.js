@@ -12,7 +12,17 @@ function rmJsonPrettyPrintDirective() {
             jsonObject = {},
             plusId = 0;
 
+        jsonObject.id = 'plus_' + plusId;
+        jsonObject.isPlusIcon = true;
+        jsonObject.isBlank = false;
+        jsonObject.element = '';
+        jsonObject.style = '';
+        jsonObject.class = 'plus-icon';
+        jsonLine.elements.push(jsonObject);
         
+        jsonObject = {};
+        jsonObject.id = '';
+        jsonObject.isPlusIcon = false;
         jsonObject.isBlank = false;
         jsonObject.element = '{';
         jsonObject.style = '';
@@ -25,6 +35,8 @@ function rmJsonPrettyPrintDirective() {
             lines: []
         };
         jsonObject = {};
+        jsonObject.id = '';
+        jsonObject.isPlusIcon = false;
         jsonObject.isBlank = false;
         jsonObject.element = '}';
         jsonObject.style = '';
