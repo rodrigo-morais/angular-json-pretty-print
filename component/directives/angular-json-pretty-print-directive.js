@@ -5,20 +5,31 @@ function rmJsonPrettyPrintDirective() {
 
     var _createObject = function(){
         var jsonLines = [],
-            jsonLine;
+            jsonLine = {
+                elements: [],
+                lines: []
+            },
+            jsonObject = {},
+            plusId = 0;
 
-        jsonLine = {
-            element: '{',
-            lines: [],
-            'class': 'json-brace'
-        };
+        
+        jsonObject.isBlank = false;
+        jsonObject.element = '{';
+        jsonObject.style = '';
+        jsonObject.class = 'json-brace';
+        jsonLine.elements.push(jsonObject);
         jsonLines.push(jsonLine);
 
         jsonLine = {
-            element: '}',
-            lines: [],
-            'class': 'json-brace'
+            elements: [],
+            lines: []
         };
+        jsonObject = {};
+        jsonObject.isBlank = false;
+        jsonObject.element = '}';
+        jsonObject.style = '';
+        jsonObject.class = 'json-brace';
+        jsonLine.elements.push(jsonObject);
         jsonLines.push(jsonLine);        
 
         return jsonLines;

@@ -11,7 +11,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if brace to create JSON object is exhibited', function() {
     var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
-        jsonReturn = '<span class="json-brace">{</span>';
+        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace">{</span>';
     
     $rootScope.$digest();
     
@@ -20,7 +20,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if brace to close JSON object is exhibited', function() {
     var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
-        jsonReturn = '<span class="json-brace">}</span>';
+        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace">}</span>';
     
     $rootScope.$digest();
     

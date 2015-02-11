@@ -1,5 +1,5 @@
 <code>
-    <div class="json-treeview" data-ng:repeat="object in jsonPretty">
-        <span class="{{object.class}}">{{object.element}}</span>
+    <div class="json-treeview" data-ng:repeat="line in jsonPretty">
+        <span data-ng:repeat="object in line.elements" class="{{object.class}}">{{object.element}}</span>
     </div>
 </code>
