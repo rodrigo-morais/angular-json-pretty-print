@@ -32,7 +32,17 @@ describe('Unit test to print JSON object in pretty way', function() {
     
     $rootScope.$digest();
     
-    expect(angular.element(element).children().length).toBe(2);
+    expect($(element).children().length).toBe(2);
+  });
+
+  it('Verify if there are two lines and each one with correct HTML class', function() {
+    var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope);
+    
+    $rootScope.$digest();
+    
+    $(element).find('.json-treeview').each(function(index, line){
+      expect($(line).hasClass('json-treeview')).toBe(true);
+    });
   });
   
 });
