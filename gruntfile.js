@@ -42,6 +42,22 @@ module.exports = function (grunt) {
             flatten: true,
             filter: 'isFile'
           },
+          fontawesomeFonts: {
+            cwd: './',
+            src: 'vendor/fontawesome/fonts/*',
+            dest: 'dist/fonts/',
+            expand: true,
+            flatten: true,
+            filter: 'isFile'
+          },
+          fontawesomeCss: {
+            cwd: './',
+            src: 'vendor/fontawesome/css/*',
+            dest: 'dist/assets/',
+            expand: true,
+            flatten: true,
+            filter: 'isFile'
+          },
           dummy: {
             cwd: './dist/',
             src: '**',
@@ -60,9 +76,19 @@ module.exports = function (grunt) {
           }
         },
         watch: {
-            files: ['component/angular-json-pretty-print.js', 'component/**/*.js',
+            files: ['component/angular-json-pretty-print.js', 'component/directives/**/*.js',
                     'component/**/*.html', 'tests/unit/**/*.js'],
-            tasks: ['jshint', 'ngtemplates', 'concat', 'karma:unit:run', 'uglify', 'copy:main', 'copy:dummy']
+            tasks: [
+                'jshint',
+                'ngtemplates',
+                'concat',
+                'karma:unit:run',
+                'uglify',
+                'copy:main',
+                'copy:fontawesomeFonts',
+                'copy:fontawesomeCss',
+                'copy:dummy'
+            ]
         }
     });
 

@@ -21,6 +21,7 @@ module.exports = function(config) {
         files: [
             bower + 'angular/angular.js',
             bower + 'angular-mocks/angular-mocks.js',
+            bower + 'jquery/dist/jquery.js',
             'dist/angular-json-pretty-print.js',
             'tests/unit/**/*.js'
         ],
