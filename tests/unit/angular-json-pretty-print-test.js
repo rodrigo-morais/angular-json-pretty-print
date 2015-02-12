@@ -134,4 +134,26 @@ describe('Unit test to print JSON object in pretty way', function() {
     
     expect($(firstLine).data('id')).toBe('plus_0');
   });
+
+  it('Verify if value as string is showed after key within first line', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
+        firstLine;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-new-line');
+    
+    expect($(firstLine).find('.json-string').length).toBe(1);
+  });
+
+  it('Verify if value within first line is "value1"', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
+        firstLine;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-new-line');
+    
+    expect($(firstLine).find('.json-string').html()).toBe("\"value1\"");
+  });
 });

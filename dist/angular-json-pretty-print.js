@@ -65,6 +65,19 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             return jsonObject;
         };
 
+        var _createValue = function(value){
+            var jsonObject = {};
+
+            jsonObject.id = '';
+            jsonObject.isPlusIcon = false;
+            jsonObject.isBlank = false;
+            jsonObject.element = '\"' + value + '\"';
+            jsonObject.style = '';
+            jsonObject.class = 'json-string';
+            
+            return jsonObject;
+        };
+
         var _createObject = function(json, blanks, plusId){
             var jsonLines = [],
                 jsonLine = {
@@ -106,6 +119,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 internalLine.elements.push(_createKey(key));
 
                 internalLine.elements.push(_createTwoPoints());
+
+                internalLine.elements.push(_createValue(json[key]));
 
                 jsonLine.lines.push(internalLine);
             });
