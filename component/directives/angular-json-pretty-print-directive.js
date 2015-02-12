@@ -4,6 +4,19 @@
 
     function rmJsonPrettyPrintDirective() {
 
+        var _createBlank = function(){
+            var jsonObject = {};
+
+            jsonObject.id = '';
+            jsonObject.isPlusIcon = false;
+            jsonObject.isBlank = true;
+            jsonObject.element = '';
+            jsonObject.style = '';
+            jsonObject.class = 'json-blank';
+            
+            return jsonObject;
+        };
+
         var _createKey = function(key){
             var jsonObject = {};
 
@@ -17,14 +30,13 @@
             return jsonObject;
         };
 
-        var _createObject = function(json){
+        var _createObject = function(json, blanks, plusId){
             var jsonLines = [],
                 jsonLine = {
                     elements: [],
                     lines: []
                 },
-                jsonObject = {},
-                plusId = 0;
+                jsonObject = {};
 
             jsonObject.id = 'plus_' + plusId;
             jsonObject.isPlusIcon = true;
@@ -48,6 +60,12 @@
                     elements: [],
                     lines: []
                 };
+
+                blanks = blanks + 1;
+
+                for(var counter = 0; counter < blanks; counter = counter + 1){
+                    internalLine.elements.push(_createBlank());
+                }
 
                 internalLine.elements.push(_createKey(key));
 
@@ -75,13 +93,15 @@
 
         var _prettifyJson = function(json){
             var jsonObject = JSON.parse(json),
-                jsonLines = [];
+                jsonLines = [],
+                blanks = 0,
+                plusId = 0;
 
             if(Array.isArray(jsonObject)){
 
             }
             else{
-                var _jsonLines = _createObject(jsonObject);
+                var _jsonLines = _createObject(jsonObject, blanks, plusId);
                 jsonLines = jsonLines.concat(_jsonLines);
             }
 
