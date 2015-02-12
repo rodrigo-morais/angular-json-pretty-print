@@ -101,4 +101,26 @@ describe('Unit test to print JSON object in pretty way', function() {
     
     expect($(firstLine).find('.json-blank').length).toBe(1);
   });
+
+  it('Verify if there is two points after key within first line', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
+        firstLine;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-new-line');
+    
+    expect($(firstLine).find('.json-two-points').length).toBe(1);
+  });
+
+  it('Verify if content of the two points element within first line is ":"', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
+        firstLine;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-new-line');
+    
+    expect($(firstLine).find('.json-two-points').html()).toBe(':');
+  });
 });

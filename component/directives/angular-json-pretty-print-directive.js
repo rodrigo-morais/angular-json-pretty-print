@@ -30,6 +30,19 @@
             return jsonObject;
         };
 
+        var _createTwoPoints = function(){
+            var jsonObject = {};
+
+            jsonObject.id = '';
+            jsonObject.isPlusIcon = false;
+            jsonObject.isBlank = false;
+            jsonObject.element = ':';
+            jsonObject.style = '';
+            jsonObject.class = 'json-two-points';
+            
+            return jsonObject;
+        };
+
         var _createObject = function(json, blanks, plusId){
             var jsonLines = [],
                 jsonLine = {
@@ -68,6 +81,8 @@
                 }
 
                 internalLine.elements.push(_createKey(key));
+
+                internalLine.elements.push(_createTwoPoints());
 
                 jsonLine.lines.push(internalLine);
             });
