@@ -14,7 +14,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
     "<i data-ng:repeat=\"object in line.elements\" class=\"fa fa-minus-square-o {{object.class}}\" id=\"{{object.id}}\" class=\"fa fa-minus-square-o plus-icon\" data-ng:if=\"object.isPlusIcon\"></i>\n" +
     "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isBlank\">&nbsp;&nbsp;</span>\n" +
     "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isPlusIcon == false && object.isBlank == false\">{{object.element}}</span>\n" +
-    "<div class=\"json-new-line\" data-ng:repeat=\"line in line.lines\" data-ng:include=\"'component/templates/line.html'\">\n" +
+    "<div class=\"json-new-line\" data-ng:repeat=\"line in line.lines\" data-ng:include=\"'component/templates/line.html'\" data-id=\"{{line.plusId}}\">\n" +
     "</div>"
   );
 
@@ -93,7 +93,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             Object.keys(json).forEach(function(key){
                 var internalLine = {
                     elements: [],
-                    lines: []
+                    lines: [],
+                    plusId: 'plus_' + plusId
                 };
 
                 blanks = blanks + 1;

@@ -71,7 +71,8 @@
             Object.keys(json).forEach(function(key){
                 var internalLine = {
                     elements: [],
-                    lines: []
+                    lines: [],
+                    plusId: 'plus_' + plusId
                 };
 
                 blanks = blanks + 1;

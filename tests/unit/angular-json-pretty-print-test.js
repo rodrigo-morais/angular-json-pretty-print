@@ -123,4 +123,15 @@ describe('Unit test to print JSON object in pretty way', function() {
     
     expect($(firstLine).find('.json-two-points').html()).toBe(':');
   });
+
+  it('Verify if each internal line has data-id', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
+        firstLine;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-new-line');
+    
+    expect($(firstLine).data('id')).toBe('plus_0');
+  });
 });
