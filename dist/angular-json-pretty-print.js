@@ -12,7 +12,9 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
   $templateCache.put('component/templates/line.html',
     "<i data-ng:repeat=\"object in line.elements\" class=\"fa fa-minus-square-o {{object.class}}\" id=\"{{object.id}}\" class=\"fa fa-minus-square-o plus-icon\" data-ng:if=\"object.isPlusIcon\"></i>\n" +
-    "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isPlusIcon == false\">{{object.element}}</span>"
+    "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isPlusIcon == false\">{{object.element}}</span>\n" +
+    "<div class=\"json-new-line\" data-ng:repeat=\"line in line.lines\" data-ng:include=\"'component/templates/line.html'\">\n" +
+    "</div>"
   );
 
 }]);
@@ -23,7 +25,20 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
     function rmJsonPrettyPrintDirective() {
 
-        var _createObject = function(){
+        var _createKey = function(key){
+            var jsonObject = {};
+
+            jsonObject.id = '';
+            jsonObject.isPlusIcon = false;
+            jsonObject.isBlank = false;
+            jsonObject.element = key;
+            jsonObject.style = '';
+            jsonObject.class = 'json-key';
+            
+            return jsonObject;
+        };
+
+        var _createObject = function(json){
             var jsonLines = [],
                 jsonLine = {
                     elements: [],
@@ -48,6 +63,18 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             jsonObject.style = '';
             jsonObject.class = 'json-brace';
             jsonLine.elements.push(jsonObject);
+
+            Object.keys(json).forEach(function(key){
+                var internalLine = {
+                    elements: [],
+                    lines: []
+                };
+
+                internalLine.elements.push(_createKey(key));
+
+                jsonLine.lines.push(internalLine);
+            });
+
             jsonLines.push(jsonLine);
 
             jsonLine = {
@@ -75,7 +102,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
             }
             else{
-                var _jsonLines = _createObject(json);
+                var _jsonLines = _createObject(jsonObject);
                 jsonLines = jsonLines.concat(_jsonLines);
             }
 

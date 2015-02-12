@@ -4,7 +4,20 @@
 
     function rmJsonPrettyPrintDirective() {
 
-        var _createObject = function(){
+        var _createKey = function(key){
+            var jsonObject = {};
+
+            jsonObject.id = '';
+            jsonObject.isPlusIcon = false;
+            jsonObject.isBlank = false;
+            jsonObject.element = key;
+            jsonObject.style = '';
+            jsonObject.class = 'json-key';
+            
+            return jsonObject;
+        };
+
+        var _createObject = function(json){
             var jsonLines = [],
                 jsonLine = {
                     elements: [],
@@ -29,6 +42,18 @@
             jsonObject.style = '';
             jsonObject.class = 'json-brace';
             jsonLine.elements.push(jsonObject);
+
+            Object.keys(json).forEach(function(key){
+                var internalLine = {
+                    elements: [],
+                    lines: []
+                };
+
+                internalLine.elements.push(_createKey(key));
+
+                jsonLine.lines.push(internalLine);
+            });
+
             jsonLines.push(jsonLine);
 
             jsonLine = {
@@ -56,7 +81,7 @@
 
             }
             else{
-                var _jsonLines = _createObject(json);
+                var _jsonLines = _createObject(jsonObject);
                 jsonLines = jsonLines.concat(_jsonLines);
             }
 
