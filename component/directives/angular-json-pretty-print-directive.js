@@ -30,6 +30,32 @@
             return jsonObject;
         };
 
+        var _createTwoPoints = function(){
+            var jsonObject = {};
+
+            jsonObject.id = '';
+            jsonObject.isPlusIcon = false;
+            jsonObject.isBlank = false;
+            jsonObject.element = ':';
+            jsonObject.style = '';
+            jsonObject.class = 'json-two-points';
+            
+            return jsonObject;
+        };
+
+        var _createValue = function(value){
+            var jsonObject = {};
+
+            jsonObject.id = '';
+            jsonObject.isPlusIcon = false;
+            jsonObject.isBlank = false;
+            jsonObject.element = '\"' + value + '\"';
+            jsonObject.style = '';
+            jsonObject.class = 'json-string';
+            
+            return jsonObject;
+        };
+
         var _createObject = function(json, blanks, plusId){
             var jsonLines = [],
                 jsonLine = {
@@ -58,7 +84,8 @@
             Object.keys(json).forEach(function(key){
                 var internalLine = {
                     elements: [],
-                    lines: []
+                    lines: [],
+                    plusId: 'plus_' + plusId
                 };
 
                 blanks = blanks + 1;
@@ -68,6 +95,10 @@
                 }
 
                 internalLine.elements.push(_createKey(key));
+
+                internalLine.elements.push(_createTwoPoints());
+
+                internalLine.elements.push(_createValue(json[key]));
 
                 jsonLine.lines.push(internalLine);
             });
