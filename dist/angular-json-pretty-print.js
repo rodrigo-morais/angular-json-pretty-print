@@ -73,11 +73,11 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             return jsonObject;
         };
 
-        var _createValue = function(value){
+        var _createValue = function(value, styles){
             var jsonObject = {};
 
             if(typeof value === 'string'){
-                return _createString(value);
+                return _createString(value, styles);
             }
             else{
                 jsonObject.id = '';
@@ -90,13 +90,13 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             }
         };
 
-        var _createString = function(value){
+        var _createString = function(value, styles){
             var jsonObject = {};
 
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
             jsonObject.element = '\"' + value + '\"';
-            jsonObject.style = '';
+            jsonObject.style = 'color:' + styles.stringColor + '; background-color:' + styles.stringHighLightColor;
             jsonObject.class = 'json-string';
             
             return jsonObject;
@@ -143,7 +143,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
                 internalLine.elements.push(_createTwoPoints());
 
-                internalLine.elements.push(_createValue(json[key]));
+                internalLine.elements.push(_createValue(json[key], styles));
 
                 if(index < keysQtd){
                     internalLine.elements.push(_createComma());
@@ -202,7 +202,9 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                     'braceColor': '#000000',
                     'braceHighLightColor': '#FFFFFF',
                     'keyColor': '#A52A2A',
-                    'keyHighLightColor': '#FFFFFF'
+                    'keyHighLightColor': '#FFFFFF',
+                    'stringColor': '#C0FF3E',
+                    'stringHighLightColor': '#FFFFFF'
                 },
                 styles;
 

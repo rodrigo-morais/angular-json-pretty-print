@@ -314,4 +314,48 @@ describe('Unit test to print JSON object in pretty way', function() {
     
     expect(_rgb2hex($(key).css('background-color'))).toBe('#FAFAD2');
   });
+
+  it('Verify if string value of JSON object has color default', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
+        stringValue;
+    
+    $rootScope.$digest();
+
+    stringValue = $(element).find('.json-string')[0];
+    
+    expect(_rgb2hex($(stringValue).css('color'))).toBe('#C0FF3E');
+  });
+
+  it('Verify if string value of JSON object has color equal the color informed in parameter', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}' styles='{\"stringColor\":\"#551A8B\"}'></rm-json-pretty-print>")($rootScope),
+        stringValue;
+    
+    $rootScope.$digest();
+
+    stringValue = $(element).find('.json-string')[0];
+    
+    expect(_rgb2hex($(stringValue).css('color'))).toBe('#551A8B');
+  });
+
+  it('Verify if string value of JSON object has highlight color default', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
+        stringValue;
+    
+    $rootScope.$digest();
+
+    stringValue = $(element).find('.json-string')[0];
+    
+    expect(_rgb2hex($(stringValue).css('background-color'))).toBe('#FFFFFF');
+  });
+
+  it('Verify if string value of JSON object has color equal the highlight color informed in parameter', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}' styles='{\"stringHighLightColor\":\"#FFD39B\"}'></rm-json-pretty-print>")($rootScope),
+        stringValue;
+    
+    $rootScope.$digest();
+
+    stringValue = $(element).find('.json-string')[0];
+    
+    expect(_rgb2hex($(stringValue).css('background-color'))).toBe('#FFD39B');
+  });
 });
