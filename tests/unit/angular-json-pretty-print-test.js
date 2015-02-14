@@ -93,13 +93,17 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if there is blank space before key within first line', function() {
     var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
-        firstLine;
+        firstLine,
+        key,
+        blank;
     
     $rootScope.$digest();
 
     firstLine = $(element).find('.json-new-line');
+    key = $(firstLine).find('.json-key')[0];
+    blank = $(key).prev();
     
-    expect($(firstLine).find('.json-blank').length).toBe(1);
+    expect($(blank).hasClass('json-blank')).toBe(true);
   });
 
   it('Verify if there is two points after key within first line', function() {
