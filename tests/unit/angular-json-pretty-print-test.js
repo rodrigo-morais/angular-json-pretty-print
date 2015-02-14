@@ -11,7 +11,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if brace to create JSON object is exhibited', function() {
     var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
-        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false &amp;&amp; object.isBlank == false">{</span>';
+        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false">{</span>';
     
     $rootScope.$digest();
     
@@ -20,7 +20,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if brace to close JSON object is exhibited', function() {
     var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
-        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false &amp;&amp; object.isBlank == false">}</span>';
+        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false">}</span>';
     
     $rootScope.$digest();
     
@@ -93,13 +93,17 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if there is blank space before key within first line', function() {
     var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
-        firstLine;
+        firstLine,
+        key,
+        blank;
     
     $rootScope.$digest();
 
     firstLine = $(element).find('.json-new-line');
+    key = $(firstLine).find('.json-key')[0];
+    blank = $(key).prev();
     
-    expect($(firstLine).find('.json-blank').length).toBe(1);
+    expect($(blank).hasClass('json-blank')).toBe(true);
   });
 
   it('Verify if there is two points after key within first line', function() {
@@ -135,7 +139,7 @@ describe('Unit test to print JSON object in pretty way', function() {
     expect($(firstLine).data('id')).toBe('plus_0');
   });
 
-  it('Verify if value as string is showed after key within first line', function() {
+  it('Verify when value type is string if the class of tag is json-string', function() {
     var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
         firstLine;
     
@@ -146,7 +150,7 @@ describe('Unit test to print JSON object in pretty way', function() {
     expect($(firstLine).find('.json-string').length).toBe(1);
   });
 
-  it('Verify if value within first line is "value1"', function() {
+  it('Verify when value type is string if value within first line contains quotations', function() {
     var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
         firstLine;
     
@@ -155,5 +159,49 @@ describe('Unit test to print JSON object in pretty way', function() {
     firstLine = $(element).find('.json-new-line');
     
     expect($(firstLine).find('.json-string').html()).toBe("\"value1\"");
+  });
+
+  it('Verify when value type is not string if value within first line not contains quotations', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": 1}'></rm-json-pretty-print>")($rootScope),
+        firstLine;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-new-line');
+    
+    expect($(firstLine).find('.json-value').html()).toBe('1');
+  });
+
+  it('Verify if there is comma in first line when has more than one line', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\", \"key2\": \"value2\"}'></rm-json-pretty-print>")($rootScope),
+        firstLine;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-new-line');
+    
+    expect($(firstLine).find('.json-comma').length).toBe(1);
+  });
+
+  it('Verify when there are two lines that last one does not have comma', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\", \"key2\": \"value2\"}'></rm-json-pretty-print>")($rootScope),
+        lastLine;
+    
+    $rootScope.$digest();
+
+    lastLine = $(element).find('.json-new-line')[$(element).find('.json-new-line').length - 1];
+    
+    expect($(lastLine).find('.json-comma').length).toBe(0);
+  });
+
+  it('Verify when there is only one line does not have comma', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
+        firstLine;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-new-line')[0];
+    
+    expect($(firstLine).find('.json-comma').length).toBe(0);
   });
 });

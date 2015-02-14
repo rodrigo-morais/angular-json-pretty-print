@@ -9,10 +9,21 @@
 
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
-            jsonObject.isBlank = true;
-            jsonObject.element = '';
+            jsonObject.element = '  ';
             jsonObject.style = '';
             jsonObject.class = 'json-blank';
+            
+            return jsonObject;
+        };
+
+        var _createComma = function(){
+            var jsonObject = {};
+
+            jsonObject.id = '';
+            jsonObject.isPlusIcon = false;
+            jsonObject.element = ',';
+            jsonObject.style = '';
+            jsonObject.class = 'json-comma';
             
             return jsonObject;
         };
@@ -22,7 +33,6 @@
 
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
-            jsonObject.isBlank = false;
             jsonObject.element = key;
             jsonObject.style = '';
             jsonObject.class = 'json-key';
@@ -35,7 +45,6 @@
 
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
-            jsonObject.isBlank = false;
             jsonObject.element = ':';
             jsonObject.style = '';
             jsonObject.class = 'json-two-points';
@@ -46,9 +55,25 @@
         var _createValue = function(value){
             var jsonObject = {};
 
+            if(typeof value === 'string'){
+                return _createString(value);
+            }
+            else{
+                jsonObject.id = '';
+                jsonObject.isPlusIcon = false;
+                jsonObject.element = value;
+                jsonObject.style = '';
+                jsonObject.class = 'json-value';
+                
+                return jsonObject;
+            }
+        };
+
+        var _createString = function(value){
+            var jsonObject = {};
+
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
-            jsonObject.isBlank = false;
             jsonObject.element = '\"' + value + '\"';
             jsonObject.style = '';
             jsonObject.class = 'json-string';
@@ -62,11 +87,11 @@
                     elements: [],
                     lines: []
                 },
-                jsonObject = {};
+                jsonObject = {},
+                keysQtd = 0;
 
             jsonObject.id = 'plus_' + plusId;
             jsonObject.isPlusIcon = true;
-            jsonObject.isBlank = false;
             jsonObject.element = '';
             jsonObject.style = '';
             jsonObject.class = 'plus-icon';
@@ -75,20 +100,19 @@
             jsonObject = {};
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
-            jsonObject.isBlank = false;
             jsonObject.element = '{';
             jsonObject.style = '';
             jsonObject.class = 'json-brace';
             jsonLine.elements.push(jsonObject);
 
-            Object.keys(json).forEach(function(key){
+            blanks = blanks + 1;
+            keysQtd = Object.keys(json).length - 1;
+            Object.keys(json).forEach(function(key, index){
                 var internalLine = {
                     elements: [],
                     lines: [],
                     plusId: 'plus_' + plusId
                 };
-
-                blanks = blanks + 1;
 
                 for(var counter = 0; counter < blanks; counter = counter + 1){
                     internalLine.elements.push(_createBlank());
@@ -99,6 +123,10 @@
                 internalLine.elements.push(_createTwoPoints());
 
                 internalLine.elements.push(_createValue(json[key]));
+
+                if(index < keysQtd){
+                    internalLine.elements.push(_createComma());
+                }
 
                 jsonLine.lines.push(internalLine);
             });

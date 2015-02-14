@@ -12,8 +12,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
   $templateCache.put('component/templates/line.html',
     "<i data-ng:repeat=\"object in line.elements\" class=\"fa fa-minus-square-o {{object.class}}\" id=\"{{object.id}}\" class=\"fa fa-minus-square-o plus-icon\" data-ng:if=\"object.isPlusIcon\"></i>\n" +
-    "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isBlank\">&nbsp;&nbsp;</span>\n" +
-    "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isPlusIcon == false && object.isBlank == false\">{{object.element}}</span>\n" +
+    "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isPlusIcon == false\">{{object.element}}</span>\n" +
     "<div class=\"json-new-line\" data-ng:repeat=\"line in line.lines\" data-ng:include=\"'component/templates/line.html'\" data-id=\"{{line.plusId}}\">\n" +
     "</div>"
   );
@@ -31,10 +30,21 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
-            jsonObject.isBlank = true;
-            jsonObject.element = '';
+            jsonObject.element = '  ';
             jsonObject.style = '';
             jsonObject.class = 'json-blank';
+            
+            return jsonObject;
+        };
+
+        var _createComma = function(){
+            var jsonObject = {};
+
+            jsonObject.id = '';
+            jsonObject.isPlusIcon = false;
+            jsonObject.element = ',';
+            jsonObject.style = '';
+            jsonObject.class = 'json-comma';
             
             return jsonObject;
         };
@@ -44,7 +54,6 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
-            jsonObject.isBlank = false;
             jsonObject.element = key;
             jsonObject.style = '';
             jsonObject.class = 'json-key';
@@ -57,7 +66,6 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
-            jsonObject.isBlank = false;
             jsonObject.element = ':';
             jsonObject.style = '';
             jsonObject.class = 'json-two-points';
@@ -68,9 +76,25 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
         var _createValue = function(value){
             var jsonObject = {};
 
+            if(typeof value === 'string'){
+                return _createString(value);
+            }
+            else{
+                jsonObject.id = '';
+                jsonObject.isPlusIcon = false;
+                jsonObject.element = value;
+                jsonObject.style = '';
+                jsonObject.class = 'json-value';
+                
+                return jsonObject;
+            }
+        };
+
+        var _createString = function(value){
+            var jsonObject = {};
+
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
-            jsonObject.isBlank = false;
             jsonObject.element = '\"' + value + '\"';
             jsonObject.style = '';
             jsonObject.class = 'json-string';
@@ -84,11 +108,11 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                     elements: [],
                     lines: []
                 },
-                jsonObject = {};
+                jsonObject = {},
+                keysQtd = 0;
 
             jsonObject.id = 'plus_' + plusId;
             jsonObject.isPlusIcon = true;
-            jsonObject.isBlank = false;
             jsonObject.element = '';
             jsonObject.style = '';
             jsonObject.class = 'plus-icon';
@@ -97,20 +121,19 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             jsonObject = {};
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
-            jsonObject.isBlank = false;
             jsonObject.element = '{';
             jsonObject.style = '';
             jsonObject.class = 'json-brace';
             jsonLine.elements.push(jsonObject);
 
-            Object.keys(json).forEach(function(key){
+            blanks = blanks + 1;
+            keysQtd = Object.keys(json).length - 1;
+            Object.keys(json).forEach(function(key, index){
                 var internalLine = {
                     elements: [],
                     lines: [],
                     plusId: 'plus_' + plusId
                 };
-
-                blanks = blanks + 1;
 
                 for(var counter = 0; counter < blanks; counter = counter + 1){
                     internalLine.elements.push(_createBlank());
@@ -121,6 +144,10 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 internalLine.elements.push(_createTwoPoints());
 
                 internalLine.elements.push(_createValue(json[key]));
+
+                if(index < keysQtd){
+                    internalLine.elements.push(_createComma());
+                }
 
                 jsonLine.lines.push(internalLine);
             });
