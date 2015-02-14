@@ -28,13 +28,13 @@
             return jsonObject;
         };
 
-        var _createKey = function(key){
+        var _createKey = function(key, styles){
             var jsonObject = {};
 
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
             jsonObject.element = key;
-            jsonObject.style = '';
+            jsonObject.style = 'color:' + styles.keyColor + '; background-color:' + styles.keyHighLightColor;
             jsonObject.class = 'json-key';
             
             return jsonObject;
@@ -52,36 +52,36 @@
             return jsonObject;
         };
 
-        var _createValue = function(value){
+        var _createValue = function(value, styles){
             var jsonObject = {};
 
             if(typeof value === 'string'){
-                return _createString(value);
+                return _createString(value, styles);
             }
             else{
                 jsonObject.id = '';
                 jsonObject.isPlusIcon = false;
                 jsonObject.element = value;
-                jsonObject.style = '';
+                jsonObject.style = 'color:' + styles.valueColor + '; background-color:' + styles.valueHighLightColor;
                 jsonObject.class = 'json-value';
                 
                 return jsonObject;
             }
         };
 
-        var _createString = function(value){
+        var _createString = function(value, styles){
             var jsonObject = {};
 
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
             jsonObject.element = '\"' + value + '\"';
-            jsonObject.style = '';
+            jsonObject.style = 'color:' + styles.stringColor + '; background-color:' + styles.stringHighLightColor;
             jsonObject.class = 'json-string';
             
             return jsonObject;
         };
 
-        var _createObject = function(json, blanks, plusId){
+        var _createObject = function(json, styles, blanks, plusId){
             var jsonLines = [],
                 jsonLine = {
                     elements: [],
@@ -101,7 +101,7 @@
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
             jsonObject.element = '{';
-            jsonObject.style = '';
+            jsonObject.style = 'color:' + styles.braceColor + '; background-color:' + styles.braceHighLightColor;
             jsonObject.class = 'json-brace';
             jsonLine.elements.push(jsonObject);
 
@@ -118,11 +118,11 @@
                     internalLine.elements.push(_createBlank());
                 }
 
-                internalLine.elements.push(_createKey(key));
+                internalLine.elements.push(_createKey(key, styles));
 
                 internalLine.elements.push(_createTwoPoints());
 
-                internalLine.elements.push(_createValue(json[key]));
+                internalLine.elements.push(_createValue(json[key], styles));
 
                 if(index < keysQtd){
                     internalLine.elements.push(_createComma());
@@ -142,7 +142,7 @@
             jsonObject.isPlusIcon = false;
             jsonObject.isBlank = false;
             jsonObject.element = '}';
-            jsonObject.style = '';
+            jsonObject.style = 'color:' + styles.braceColor + '; background-color:' + styles.braceHighLightColor;
             jsonObject.class = 'json-brace';
             jsonLine.elements.push(jsonObject);
             jsonLines.push(jsonLine);        
@@ -150,7 +150,7 @@
             return jsonLines;
         };
 
-        var _prettifyJson = function(json){
+        var _prettifyJson = function(json, styles){
             var jsonObject = JSON.parse(json),
                 jsonLines = [],
                 blanks = 0,
@@ -160,7 +160,7 @@
 
             }
             else{
-                var _jsonLines = _createObject(jsonObject, blanks, plusId);
+                var _jsonLines = _createObject(jsonObject, styles, blanks, plusId);
                 jsonLines = jsonLines.concat(_jsonLines);
             }
 
@@ -173,9 +173,34 @@
             restrict: 'E',
             templateUrl: html,
             replace: true,
+            scope: {
+                styles: '@'
+            },
             link: function (scope, element, attrs, controller) {
                 attrs.$observe("json", function (newValue) {
-                    scope.jsonPretty = _prettifyJson(newValue);
+                    var defaultStyles = {
+                        'braceColor': '#000000',
+                        'braceHighLightColor': '#FFFFFF',
+                        'keyColor': '#A52A2A',
+                        'keyHighLightColor': '#FFFFFF',
+                        'stringColor': '#C0FF3E',
+                        'stringHighLightColor': '#FFFFFF',
+                        'valueColor': '#000080',
+                        'valueHighLightColor': '#FFFFFF'
+                    },
+                    styles;
+
+                    if(scope.styles){
+                        if(typeof scope.styles === 'string'){
+                            scope.styles = JSON.parse(scope.styles);
+                        }
+                        styles = angular.extend({}, defaultStyles, scope.styles);
+                    }
+                    else{
+                        styles = defaultStyles;
+                    }
+                  
+                    scope.jsonPretty = _prettifyJson(newValue, styles);
                 });
             }
         };
