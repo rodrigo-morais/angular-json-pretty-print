@@ -28,13 +28,13 @@
             return jsonObject;
         };
 
-        var _createKey = function(key){
+        var _createKey = function(key, styles){
             var jsonObject = {};
 
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
             jsonObject.element = key;
-            jsonObject.style = '';
+            jsonObject.style = 'color:' + styles.keyColor + '; background-color:' + styles.keyHighLightColor;
             jsonObject.class = 'json-key';
             
             return jsonObject;
@@ -118,7 +118,7 @@
                     internalLine.elements.push(_createBlank());
                 }
 
-                internalLine.elements.push(_createKey(key));
+                internalLine.elements.push(_createKey(key, styles));
 
                 internalLine.elements.push(_createTwoPoints());
 
@@ -179,7 +179,9 @@
             link: function (scope, element, attrs, controller) {
                 var defaultStyles = {
                     'braceColor': '#000000',
-                    'braceHighLightColor': '#FFFFFF'
+                    'braceHighLightColor': '#FFFFFF',
+                    'keyColor': '#A52A2A',
+                    'keyHighLightColor': '#FFFFFF'
                 },
                 styles;
 
