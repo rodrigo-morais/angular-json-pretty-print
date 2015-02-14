@@ -195,32 +195,32 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             templateUrl: html,
             replace: true,
             scope: {
-                styles: '='
+                styles: '@'
             },
             link: function (scope, element, attrs, controller) {
-                var defaultStyles = {
-                    'braceColor': '#000000',
-                    'braceHighLightColor': '#FFFFFF',
-                    'keyColor': '#A52A2A',
-                    'keyHighLightColor': '#FFFFFF',
-                    'stringColor': '#C0FF3E',
-                    'stringHighLightColor': '#FFFFFF',
-                    'valueColor': '#000080',
-                    'valueHighLightColor': '#FFFFFF'
-                },
-                styles;
-
-                if(scope.styles){
-                    if(typeof scope.styles === 'string'){
-                        scope.styles = JSON.parse(scope.styles);
-                    }
-                    styles = angular.extend({}, defaultStyles, scope.styles);
-                }
-                else{
-                    styles = defaultStyles;
-                }
-
                 attrs.$observe("json", function (newValue) {
+                    var defaultStyles = {
+                        'braceColor': '#000000',
+                        'braceHighLightColor': '#FFFFFF',
+                        'keyColor': '#A52A2A',
+                        'keyHighLightColor': '#FFFFFF',
+                        'stringColor': '#C0FF3E',
+                        'stringHighLightColor': '#FFFFFF',
+                        'valueColor': '#000080',
+                        'valueHighLightColor': '#FFFFFF'
+                    },
+                    styles;
+
+                    if(scope.styles){
+                        if(typeof scope.styles === 'string'){
+                            scope.styles = JSON.parse(scope.styles);
+                        }
+                        styles = angular.extend({}, defaultStyles, scope.styles);
+                    }
+                    else{
+                        styles = defaultStyles;
+                    }
+                  
                     scope.jsonPretty = _prettifyJson(newValue, styles);
                 });
             }
