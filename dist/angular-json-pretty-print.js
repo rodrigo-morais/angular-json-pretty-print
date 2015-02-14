@@ -122,7 +122,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
             jsonObject.element = '{';
-            jsonObject.style = 'color:' + styles.braceColor;
+            jsonObject.style = 'color:' + styles.braceColor + '; background-color:' + styles.braceHighLightColor;
             jsonObject.class = 'json-brace';
             jsonLine.elements.push(jsonObject);
 
@@ -163,7 +163,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             jsonObject.isPlusIcon = false;
             jsonObject.isBlank = false;
             jsonObject.element = '}';
-            jsonObject.style = 'color:' + styles.braceColor;
+            jsonObject.style = 'color:' + styles.braceColor + '; background-color:' + styles.braceHighLightColor;
             jsonObject.class = 'json-brace';
             jsonLine.elements.push(jsonObject);
             jsonLines.push(jsonLine);        
@@ -199,7 +199,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             },
             link: function (scope, element, attrs, controller) {
                 var defaultStyles = {
-                    'braceColor': '#000000'
+                    'braceColor': '#000000',
+                    'braceHighLightColor': '#FFFFFF'
                 },
                 styles;
 

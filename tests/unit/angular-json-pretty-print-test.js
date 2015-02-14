@@ -33,7 +33,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if brace to create JSON object is exhibited', function() {
     var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
-        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false" style="color:#000000">{</span>';
+        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false" style="color:#000000; background-color:#FFFFFF">{</span>';
     
     $rootScope.$digest();
     
@@ -42,7 +42,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if brace to close JSON object is exhibited', function() {
     var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
-        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false" style="color:#000000">}</span>';
+        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false" style="color:#000000; background-color:#FFFFFF">}</span>';
     
     $rootScope.$digest();
     
@@ -247,5 +247,27 @@ describe('Unit test to print JSON object in pretty way', function() {
     brace = $(element).find('.json-brace')[0];
     
     expect(_rgb2hex($(brace).css('color'))).toBe('#FF001B');
+  });
+
+  it('Verify if brace of JSON object has highlight color default', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
+        brace;
+    
+    $rootScope.$digest();
+
+    brace = $(element).find('.json-brace')[0];
+    
+    expect(_rgb2hex($(brace).css('background-color'))).toBe('#FFFFFF');
+  });
+
+  it('Verify if brace of JSON object has color equal the highlight color informed in parameter', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}' styles='{\"braceHighLightColor\":\"#FFD39B\"}'></rm-json-pretty-print>")($rootScope),
+        brace;
+    
+    $rootScope.$digest();
+
+    brace = $(element).find('.json-brace')[0];
+    
+    expect(_rgb2hex($(brace).css('background-color'))).toBe('#FFD39B');
   });
 });
