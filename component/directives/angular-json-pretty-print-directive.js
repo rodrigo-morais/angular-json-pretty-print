@@ -81,7 +81,7 @@
             return jsonObject;
         };
 
-        var _createObject = function(json, blanks, plusId){
+        var _createObject = function(json, styles, blanks, plusId){
             var jsonLines = [],
                 jsonLine = {
                     elements: [],
@@ -101,7 +101,7 @@
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
             jsonObject.element = '{';
-            jsonObject.style = '';
+            jsonObject.style = 'color:' + styles.braceColor;
             jsonObject.class = 'json-brace';
             jsonLine.elements.push(jsonObject);
 
@@ -142,7 +142,7 @@
             jsonObject.isPlusIcon = false;
             jsonObject.isBlank = false;
             jsonObject.element = '}';
-            jsonObject.style = '';
+            jsonObject.style = 'color:' + styles.braceColor;
             jsonObject.class = 'json-brace';
             jsonLine.elements.push(jsonObject);
             jsonLines.push(jsonLine);        
@@ -150,7 +150,7 @@
             return jsonLines;
         };
 
-        var _prettifyJson = function(json){
+        var _prettifyJson = function(json, styles){
             var jsonObject = JSON.parse(json),
                 jsonLines = [],
                 blanks = 0,
@@ -160,7 +160,7 @@
 
             }
             else{
-                var _jsonLines = _createObject(jsonObject, blanks, plusId);
+                var _jsonLines = _createObject(jsonObject, styles, blanks, plusId);
                 jsonLines = jsonLines.concat(_jsonLines);
             }
 
@@ -173,9 +173,27 @@
             restrict: 'E',
             templateUrl: html,
             replace: true,
+            scope: {
+                styles: '='
+            },
             link: function (scope, element, attrs, controller) {
+                var defaultStyles = {
+                    'braceColor': '#000000'
+                },
+                styles;
+
+                if(scope.styles){
+                    if(typeof scope.styles === 'string'){
+                        scope.styles = JSON.parse(scope.styles);
+                    }
+                    styles = angular.extend({}, defaultStyles, scope.styles);
+                }
+                else{
+                    styles = defaultStyles;
+                }
+
                 attrs.$observe("json", function (newValue) {
-                    scope.jsonPretty = _prettifyJson(newValue);
+                    scope.jsonPretty = _prettifyJson(newValue, styles);
                 });
             }
         };

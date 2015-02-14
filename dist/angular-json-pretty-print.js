@@ -12,7 +12,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
   $templateCache.put('component/templates/line.html',
     "<i data-ng:repeat=\"object in line.elements\" class=\"fa fa-minus-square-o {{object.class}}\" id=\"{{object.id}}\" class=\"fa fa-minus-square-o plus-icon\" data-ng:if=\"object.isPlusIcon\"></i>\n" +
-    "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isPlusIcon == false\">{{object.element}}</span>\n" +
+    "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isPlusIcon == false\" style=\"{{object.style}}\">{{object.element}}</span>\n" +
     "<div class=\"json-new-line\" data-ng:repeat=\"line in line.lines\" data-ng:include=\"'component/templates/line.html'\" data-id=\"{{line.plusId}}\">\n" +
     "</div>"
   );
@@ -102,7 +102,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             return jsonObject;
         };
 
-        var _createObject = function(json, blanks, plusId){
+        var _createObject = function(json, styles, blanks, plusId){
             var jsonLines = [],
                 jsonLine = {
                     elements: [],
@@ -122,7 +122,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
             jsonObject.element = '{';
-            jsonObject.style = '';
+            jsonObject.style = 'color:' + styles.braceColor;
             jsonObject.class = 'json-brace';
             jsonLine.elements.push(jsonObject);
 
@@ -163,7 +163,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             jsonObject.isPlusIcon = false;
             jsonObject.isBlank = false;
             jsonObject.element = '}';
-            jsonObject.style = '';
+            jsonObject.style = 'color:' + styles.braceColor;
             jsonObject.class = 'json-brace';
             jsonLine.elements.push(jsonObject);
             jsonLines.push(jsonLine);        
@@ -171,7 +171,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             return jsonLines;
         };
 
-        var _prettifyJson = function(json){
+        var _prettifyJson = function(json, styles){
             var jsonObject = JSON.parse(json),
                 jsonLines = [],
                 blanks = 0,
@@ -181,7 +181,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
             }
             else{
-                var _jsonLines = _createObject(jsonObject, blanks, plusId);
+                var _jsonLines = _createObject(jsonObject, styles, blanks, plusId);
                 jsonLines = jsonLines.concat(_jsonLines);
             }
 
@@ -194,9 +194,27 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             restrict: 'E',
             templateUrl: html,
             replace: true,
+            scope: {
+                styles: '='
+            },
             link: function (scope, element, attrs, controller) {
+                var defaultStyles = {
+                    'braceColor': '#000000'
+                },
+                styles;
+
+                if(scope.styles){
+                    if(typeof scope.styles === 'string'){
+                        scope.styles = JSON.parse(scope.styles);
+                    }
+                    styles = angular.extend({}, defaultStyles, scope.styles);
+                }
+                else{
+                    styles = defaultStyles;
+                }
+
                 attrs.$observe("json", function (newValue) {
-                    scope.jsonPretty = _prettifyJson(newValue);
+                    scope.jsonPretty = _prettifyJson(newValue, styles);
                 });
             }
         };

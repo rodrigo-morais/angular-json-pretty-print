@@ -2,6 +2,28 @@ describe('Unit test to print JSON object in pretty way', function() {
   var $compile,
       $rootScope;
 
+  var _rgb2hex = function (rgb) {
+    var isRGBA = false;
+
+    if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
+
+    isRGBA = rgb.indexOf('rgba') > -1;
+
+    rgb = isRGBA ? rgb.match(/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*(\d+)\)$/)
+                : rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+
+    function hex(x) {
+        return ("0" + parseInt(x).toString(16)).slice(-2).toUpperCase();
+    }
+
+    if(isRGBA){
+        return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]) + hex(rgb[4]);
+    }
+    else{
+        return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+     }
+  };
+
   beforeEach(module('JsonPrettyPrint'));
 
   beforeEach(inject(function(_$compile_, _$rootScope_){
@@ -11,7 +33,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if brace to create JSON object is exhibited', function() {
     var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
-        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false">{</span>';
+        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false" style="color:#000000">{</span>';
     
     $rootScope.$digest();
     
@@ -20,7 +42,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if brace to close JSON object is exhibited', function() {
     var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
-        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false">}</span>';
+        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false" style="color:#000000">}</span>';
     
     $rootScope.$digest();
     
@@ -203,5 +225,27 @@ describe('Unit test to print JSON object in pretty way', function() {
     firstLine = $(element).find('.json-new-line')[0];
     
     expect($(firstLine).find('.json-comma').length).toBe(0);
+  });
+
+  it('Verify if brace of JSON object has color default', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
+        brace;
+    
+    $rootScope.$digest();
+
+    brace = $(element).find('.json-brace')[0];
+    
+    expect(_rgb2hex($(brace).css('color'))).toBe('#000000');
+  });
+
+  it('Verify if brace of JSON object has color equal the color informed in parameter', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}' styles='{\"braceColor\":\"#FF001b\"}'></rm-json-pretty-print>")($rootScope),
+        brace;
+    
+    $rootScope.$digest();
+
+    brace = $(element).find('.json-brace')[0];
+    
+    expect(_rgb2hex($(brace).css('color'))).toBe('#FF001B');
   });
 });
