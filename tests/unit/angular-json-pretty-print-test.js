@@ -358,4 +358,55 @@ describe('Unit test to print JSON object in pretty way', function() {
     
     expect(_rgb2hex($(stringValue).css('background-color'))).toBe('#FFD39B');
   });
+
+
+
+
+
+
+
+
+  it('Verify if value of JSON object has color default', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": 1}'></rm-json-pretty-print>")($rootScope),
+        value;
+    
+    $rootScope.$digest();
+
+    value = $(element).find('.json-value')[0];
+    
+    expect(_rgb2hex($(value).css('color'))).toBe('#000080');
+  });
+
+  it('Verify if value of JSON object has color equal the color informed in parameter', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": 1}' styles='{\"valueColor\":\"#FF0000\"}'></rm-json-pretty-print>")($rootScope),
+        value;
+    
+    $rootScope.$digest();
+
+    value = $(element).find('.json-value')[0];
+    
+    expect(_rgb2hex($(value).css('color'))).toBe('#FF0000');
+  });
+
+  it('Verify if value of JSON object has highlight color default', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": 1}'></rm-json-pretty-print>")($rootScope),
+        value;
+    
+    $rootScope.$digest();
+
+    value = $(element).find('.json-value')[0];
+    
+    expect(_rgb2hex($(value).css('background-color'))).toBe('#FFFFFF');
+  });
+
+  it('Verify if value of JSON object has color equal the highlight color informed in parameter', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": 1}' styles='{\"valueHighLightColor\":\"#FFE4E1\"}'></rm-json-pretty-print>")($rootScope),
+        value;
+    
+    $rootScope.$digest();
+
+    value = $(element).find('.json-value')[0];
+    
+    expect(_rgb2hex($(value).css('background-color'))).toBe('#FFE4E1');
+  });
 });

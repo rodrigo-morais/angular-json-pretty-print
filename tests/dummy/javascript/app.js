@@ -8,7 +8,7 @@ var app = angular.module('myApp', ['JsonPrettyPrint']);
     app.controller(controllerId, ['$scope', jsonController]);
 
     function jsonController($scope){
-        $scope.jsonValue = '{"key3": "value3"}';
+        $scope.jsonValue = '{"key3": "value3", "key2": 2}';
         $scope.refresh = function(event){
             var jsonText = document.getElementById('jsonText').value;
             $scope.jsonValue = jsonText;

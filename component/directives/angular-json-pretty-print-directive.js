@@ -62,7 +62,7 @@
                 jsonObject.id = '';
                 jsonObject.isPlusIcon = false;
                 jsonObject.element = value;
-                jsonObject.style = '';
+                jsonObject.style = 'color:' + styles.valueColor + '; background-color:' + styles.valueHighLightColor;
                 jsonObject.class = 'json-value';
                 
                 return jsonObject;
@@ -183,7 +183,9 @@
                     'keyColor': '#A52A2A',
                     'keyHighLightColor': '#FFFFFF',
                     'stringColor': '#C0FF3E',
-                    'stringHighLightColor': '#FFFFFF'
+                    'stringHighLightColor': '#FFFFFF',
+                    'valueColor': '#000080',
+                    'valueHighLightColor': '#FFFFFF'
                 },
                 styles;
 
