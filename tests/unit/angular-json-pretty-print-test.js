@@ -160,4 +160,37 @@ describe('Unit test to print JSON object in pretty way', function() {
     
     expect($(firstLine).find('.json-string').html()).toBe("\"value1\"");
   });
+
+  it('Verify if there is comma in first line when has more than one line', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\", \"key2\": \"value2\"}'></rm-json-pretty-print>")($rootScope),
+        firstLine;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-new-line');
+    
+    expect($(firstLine).find('.json-comma').length).toBe(1);
+  });
+
+  it('Verify when there are two lines that last one does not have comma', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\", \"key2\": \"value2\"}'></rm-json-pretty-print>")($rootScope),
+        lastLine;
+    
+    $rootScope.$digest();
+
+    lastLine = $(element).find('.json-new-line')[$(element).find('.json-new-line').length - 1];
+    
+    expect($(lastLine).find('.json-comma').length).toBe(0);
+  });
+
+  it('Verify when there is only one line does not have comma', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": \"value1\"}'></rm-json-pretty-print>")($rootScope),
+        firstLine;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-new-line')[0];
+    
+    expect($(firstLine).find('.json-comma').length).toBe(0);
+  });
 });
