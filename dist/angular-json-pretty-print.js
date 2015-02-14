@@ -12,8 +12,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
   $templateCache.put('component/templates/line.html',
     "<i data-ng:repeat=\"object in line.elements\" class=\"fa fa-minus-square-o {{object.class}}\" id=\"{{object.id}}\" class=\"fa fa-minus-square-o plus-icon\" data-ng:if=\"object.isPlusIcon\"></i>\n" +
-    "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isBlank\">&nbsp;&nbsp;</span>\n" +
-    "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isPlusIcon == false && object.isBlank == false\">{{object.element}}</span>\n" +
+    "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isPlusIcon == false\">{{object.element}}</span>\n" +
     "<div class=\"json-new-line\" data-ng:repeat=\"line in line.lines\" data-ng:include=\"'component/templates/line.html'\" data-id=\"{{line.plusId}}\">\n" +
     "</div>"
   );
@@ -32,7 +31,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
             jsonObject.isBlank = true;
-            jsonObject.element = '';
+            jsonObject.element = '  ';
             jsonObject.style = '';
             jsonObject.class = 'json-blank';
             
@@ -136,8 +135,6 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 internalLine.elements.push(_createKey(key));
 
                 internalLine.elements.push(_createTwoPoints());
-
-                internalLine.elements.push(_createBlank());
 
                 internalLine.elements.push(_createValue(json[key]));
 

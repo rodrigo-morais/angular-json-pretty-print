@@ -42,6 +42,14 @@ module.exports = function (grunt) {
             flatten: true,
             filter: 'isFile'
           },
+          css: {
+            cwd: './',
+            src: 'component/assets/*',
+            dest: 'dist/assets/',
+            expand: true,
+            flatten: true,
+            filter: 'isFile'
+          },
           fontawesomeFonts: {
             cwd: './',
             src: 'vendor/fontawesome/fonts/*',
@@ -76,8 +84,13 @@ module.exports = function (grunt) {
           }
         },
         watch: {
-            files: ['component/angular-json-pretty-print.js', 'component/directives/**/*.js',
-                    'component/**/*.html', 'tests/unit/**/*.js'],
+            files: [
+                'component/angular-json-pretty-print.js',
+                'component/directives/**/*.js',
+                'component/**/*.html',
+                'component/assets/**/*.css',
+                'tests/unit/**/*.js'
+            ],
             tasks: [
                 'jshint',
                 'ngtemplates',
@@ -85,6 +98,7 @@ module.exports = function (grunt) {
                 'karma:unit:run',
                 'uglify',
                 'copy:main',
+                'copy:css',
                 'copy:fontawesomeFonts',
                 'copy:fontawesomeCss',
                 'copy:dummy'

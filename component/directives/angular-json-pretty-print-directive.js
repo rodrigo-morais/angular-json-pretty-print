@@ -10,7 +10,7 @@
             jsonObject.id = '';
             jsonObject.isPlusIcon = false;
             jsonObject.isBlank = true;
-            jsonObject.element = '';
+            jsonObject.element = '  ';
             jsonObject.style = '';
             jsonObject.class = 'json-blank';
             
@@ -114,8 +114,6 @@
                 internalLine.elements.push(_createKey(key));
 
                 internalLine.elements.push(_createTwoPoints());
-
-                internalLine.elements.push(_createBlank());
 
                 internalLine.elements.push(_createValue(json[key]));
 
