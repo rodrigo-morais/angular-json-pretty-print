@@ -408,4 +408,46 @@ describe('Unit test to print JSON object in pretty way', function() {
     
     expect(_rgb2hex($(value).css('background-color'))).toBe('#FFE4E1');
   });
+
+  it('Verify if value of JSON object is an object then last element should be a brace', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": {\"sub\":1}}' styles='{\"valueHighLightColor\":\"#FFE4E1\"}'></rm-json-pretty-print>")($rootScope),
+        jsonElements, lastElement;
+    
+    $rootScope.$digest();
+
+    jsonElements = $(element).find('.json-treeview').first().children()[0];
+    lastElement = jsonElements.children[jsonElements.children.length - 1];
+    
+    expect($(lastElement).text()).toBe('{');
+  });
+
+  it('Verify if value of JSON object is an object then element after two points should be a icon', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": {\"sub\":1}}' styles='{\"valueHighLightColor\":\"#FFE4E1\"}'></rm-json-pretty-print>")($rootScope),
+        firstLine, jsonElements, lastElement, twoPoints;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-treeview').first().find('.json-new-line');
+    jsonElements = firstLine.children()[0];
+
+    $(jsonElements).children().each(function(index, element){
+      if($(element).hasClass('json-two-points')){
+        twoPoints = index;
+      }
+    });
+    
+    expect($(jsonElements).children()[twoPoints + 1].tagName).toBe('I');
+  });
+
+  it('Verify if value of JSON object is an object then after elements div should be new line div', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": {\"sub\":1}}' styles='{\"valueHighLightColor\":\"#FFE4E1\"}'></rm-json-pretty-print>")($rootScope),
+        firstLine, jsonElements, lastElement, twoPoints;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-treeview').first().find('.json-new-line');
+    jsonElements = firstLine.children()[0];
+
+    expect($(jsonElements).next().hasClass('json-new-line')).toBe(true);
+  });
 });
