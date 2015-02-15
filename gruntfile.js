@@ -86,6 +86,7 @@ module.exports = function (grunt) {
         watch: {
             files: [
                 'component/angular-json-pretty-print.js',
+                'component/controllers/**/*.js',
                 'component/directives/**/*.js',
                 'component/**/*.html',
                 'component/assets/**/*.css',
