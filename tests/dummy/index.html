@@ -6,9 +6,9 @@
     <body ng-app="myApp">
         <div ng-controller="JsonController">
             <h1>Test JSON Pretty Print</h1>
-            <div style="position: relative; float: left; width: 70%; height: 20%;; margin-bottom: 2%;">
+            <div style="position: relative; float: left; width: 70%; height: 20%; margin-bottom: 2%;">
                 <textarea id="jsonText" style="position: relative; float: left; clear: none; display: inline; width:60%; height: 100%; margin-right: 2%;">{{jsonValue}}</textarea>
-                <div style="position: relative; float: left; clear: none;">
+                <div style="position: relative; float: left; clear: none; max-width: 25vw;">
                     <button style="position: relative; float: left; clear: both;" data-ng:click="refresh($event)">Change</button>
                     <span style="position:relative; float:left; clear: left; margin-top: 5%;">
                         <b>JSON value:</b> {{jsonValue}}

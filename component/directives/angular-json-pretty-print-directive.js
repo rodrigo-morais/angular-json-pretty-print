@@ -52,11 +52,15 @@
             return jsonObject;
         };
 
-        var _createValue = function(value, styles){
-            var jsonObject = {};
+        var _createValue = function(value, styles, blanks, plusId){
+            var jsonObject = {},
+                internalPlusId = plusId + 1;
 
             if(typeof value === 'string'){
                 return _createString(value, styles);
+            }
+            else if(typeof value === 'object'){
+                return _createObject(value, styles, blanks, internalPlusId);
             }
             else{
                 jsonObject.id = '';
@@ -112,9 +116,10 @@
                     elements: [],
                     lines: [],
                     plusId: 'plus_' + plusId
-                };
+                },
+                newValue, counter;
 
-                for(var counter = 0; counter < blanks; counter = counter + 1){
+                for(counter = 0; counter < blanks; counter = counter + 1){
                     internalLine.elements.push(_createBlank());
                 }
 
@@ -122,7 +127,52 @@
 
                 internalLine.elements.push(_createTwoPoints());
 
-                internalLine.elements.push(_createValue(json[key], styles));
+                newValue = _createValue(json[key], styles, blanks, plusId);
+
+                if(Array.isArray(newValue) && newValue[0].elements[newValue[0].elements.length - 1].class === 'json-brace'){
+                    var icon = newValue[0].elements[0],
+                        openBrace = newValue[0].elements[newValue[0].elements.length - 1],
+                        closeBrace = newValue[1].elements[newValue[0].elements.length - 1],
+                        internalBlanks = blanks + 1;
+
+                    internalLine
+                        .elements
+                        .push(icon);
+
+                    internalLine
+                        .elements
+                        .push(openBrace);
+
+                    for(counter = 0; counter < internalBlanks; counter = counter + 1){
+                        newValue[0].lines[0].elements.unshift(_createBlank());
+                    }
+
+                    internalLine.lines = internalLine
+                                                .lines
+                                                .concat(newValue[0].lines);
+
+                    jsonLine.lines.push(internalLine);
+
+                    internalLine = {
+                        elements: [],
+                        lines: []
+                    };
+
+                    for(counter = 0; counter < blanks; counter = counter + 1){
+                        internalLine.elements.push(_createBlank());
+                    }
+
+                    newValue[1].elements.forEach(function (element) {
+                        internalLine
+                            .elements
+                            .push(element);
+                    });
+                }
+                else{
+                    internalLine
+                        .elements
+                        .push(newValue);
+                }
 
                 if(index < keysQtd){
                     internalLine.elements.push(_createComma());
