@@ -1,1 +1,1 @@
-var jsonPrettyPrint = angular.module('JsonPrettyPrint', []);
+var jsonPrettyPrint = angular.module('JsonPrettyPrint', ['ngSanitize']);

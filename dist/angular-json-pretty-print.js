@@ -1,4 +1,4 @@
-var jsonPrettyPrint = angular.module('JsonPrettyPrint', []);
+var jsonPrettyPrint = angular.module('JsonPrettyPrint', ['ngSanitize']);
 angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache) {
   'use strict';
 
@@ -10,9 +10,13 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
   );
 
 
+  $templateCache.put('component/templates/jsonTag.html',
+    "<div class=\"json-elements\" ng-bind-html=\"deliberatelyTrustDangerousSnippet()\"></div>"
+  );
+
+
   $templateCache.put('component/templates/line.html',
-    "<i data-ng:repeat=\"object in line.elements\" class=\"fa fa-minus-square-o {{object.class}}\" id=\"{{object.id}}\" class=\"fa fa-minus-square-o plus-icon\" data-ng:if=\"object.isPlusIcon\"></i>\n" +
-    "<span data-ng:repeat=\"object in line.elements\" class=\"{{object.class}}\" data-ng:if=\"object.isPlusIcon == false\" style=\"{{object.style}}\">{{object.element}}</span>\n" +
+    "<rm-json-tag elements=\"line.elements\"></rm-json-tag>\n" +
     "<div class=\"json-new-line\" data-ng:repeat=\"line in line.lines\" data-ng:include=\"'component/templates/line.html'\" data-id=\"{{line.plusId}}\">\n" +
     "</div>"
   );
@@ -273,6 +277,64 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                   
                     scope.jsonPretty = _prettifyJson(newValue, styles);
                 });
+            }
+        };
+
+    }
+})();
+(function() {
+    jsonPrettyPrint.directive('rmJsonTag',
+    ['$sce', rmJsonTagDirective]);
+
+    function rmJsonTagDirective($sce) {
+
+        var _createIcon = function(element){
+            var icon = '';
+
+            icon = '<i class="fa fa-minus-square-o plus-icon ' + 
+                element.class + 
+                '" id="' + 
+                element.id + 
+                '"></i>';
+
+            return icon;
+        };
+
+        var _createSpan = function(element){
+            var span = '';
+
+            span = '<span class="' +
+                    element.class +
+                    '" style="' +
+                    element.style +
+                    '">'+ element.element + '</span>';
+
+            return span;
+        };
+
+        var html = 'component/templates/jsonTag.html';
+
+        return {
+            restrict: 'E',
+            templateUrl: html,
+            replace: true,
+            scope: {
+                'elements': '='
+            },
+            link: function (scope, element, attrs, controller) {
+                scope.tags = '';
+                scope.elements.forEach(function(element){
+                    if(element.isPlusIcon){
+                        scope.tags = scope.tags + _createIcon(element);
+                    }
+                    else{
+                        scope.tags = scope.tags + _createSpan(element);
+                    }
+                });
+
+                scope.deliberatelyTrustDangerousSnippet = function() {
+                   return $sce.trustAsHtml(scope.tags);
+                };
             }
         };
 

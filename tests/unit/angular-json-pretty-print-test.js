@@ -33,7 +33,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if brace to create JSON object is exhibited', function() {
     var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
-        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false" style="color:#000000; background-color:#FFFFFF">{</span>';
+        jsonReturn = '<span class="json-brace" style="color:#000000; background-color:#FFFFFF">{</span>';
     
     $rootScope.$digest();
     
@@ -42,7 +42,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if brace to close JSON object is exhibited', function() {
     var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
-        jsonReturn = '<span data-ng:repeat="object in line.elements" class="json-brace" data-ng:if="object.isPlusIcon == false" style="color:#000000; background-color:#FFFFFF">}</span>';
+        jsonReturn = '<span class="json-brace" style="color:#000000; background-color:#FFFFFF">}</span>';
     
     $rootScope.$digest();
     
@@ -68,19 +68,25 @@ describe('Unit test to print JSON object in pretty way', function() {
   });
 
   it('Verify if there is a icon before open brace', function() {
-    var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope);
+    var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
+        jsonElements;
     
     $rootScope.$digest();
+
+    jsonElements = $(element).find('.json-treeview').first().children()[0];
     
-    expect($(element).find('.json-treeview').first().children()[0].tagName).toBe('I');
+    expect(jsonElements.children[0].tagName).toBe('I');
   });
 
   it('Verify the class in icon before open brace', function() {
-    var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope);
+    var element = $compile("<rm-json-pretty-print json='{}'></rm-json-pretty-print>")($rootScope),
+        jsonElements;
     
     $rootScope.$digest();
+
+    jsonElements = $(element).find('.json-treeview').first().children()[0];
     
-    expect($($(element).find('.json-treeview').first().children()[0]).hasClass('plus-icon')).toBe(true);
+    expect($(jsonElements.children[0]).hasClass('plus-icon')).toBe(true);
   });
 
   it('Verify if exist line to content', function() {
@@ -358,13 +364,6 @@ describe('Unit test to print JSON object in pretty way', function() {
     
     expect(_rgb2hex($(stringValue).css('background-color'))).toBe('#FFD39B');
   });
-
-
-
-
-
-
-
 
   it('Verify if value of JSON object has color default', function() {
     var element = $compile("<rm-json-pretty-print json='{\"key1\": 1}'></rm-json-pretty-print>")($rootScope),
