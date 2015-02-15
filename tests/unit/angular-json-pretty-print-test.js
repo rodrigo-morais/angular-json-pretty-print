@@ -1,6 +1,7 @@
 describe('Unit test to print JSON object in pretty way', function() {
   var $compile,
-      $rootScope;
+      $rootScope,
+      $timeout;
 
   var _rgb2hex = function (rgb) {
     var isRGBA = false;
@@ -26,9 +27,10 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   beforeEach(module('JsonPrettyPrint'));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_){
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_){
     $compile = _$compile_;
     $rootScope = _$rootScope_;
+    $timeout = _$timeout_;
   }));
 
   it('Verify if brace to create JSON object is exhibited', function() {
@@ -441,7 +443,7 @@ describe('Unit test to print JSON object in pretty way', function() {
 
   it('Verify if value of JSON object is an object then after elements div should be new line div', function() {
     var element = $compile("<rm-json-pretty-print json='{\"key1\": {\"sub\":1}}' styles='{\"valueHighLightColor\":\"#FFE4E1\"}'></rm-json-pretty-print>")($rootScope),
-        firstLine, jsonElements, lastElement, twoPoints;
+        firstLine, jsonElements;
     
     $rootScope.$digest();
 
@@ -449,5 +451,24 @@ describe('Unit test to print JSON object in pretty way', function() {
     jsonElements = firstLine.children()[0];
 
     expect($(jsonElements).next().hasClass('json-new-line')).toBe(true);
+  });
+
+  it('Verify if when icon is clicked the data of JSON object will be hidden', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": {\"sub\":1}}' styles='{\"valueHighLightColor\":\"#FFE4E1\"}'></rm-json-pretty-print>")($rootScope),
+        firstLine, jsonElements, icon;
+
+    $rootScope.$digest();
+
+    $timeout.flush();    
+
+    firstLine = $(element).find('.json-treeview').first().find('.json-new-line');
+    jsonElements = firstLine.children()[0];
+
+    expect($(jsonElements).next().css('display')).toBe('');
+
+    icon = $(jsonElements).find('.plus-icon').first();
+    $(icon).click();
+
+    expect($(jsonElements).next().css('display')).toBe('none');
   });
 });

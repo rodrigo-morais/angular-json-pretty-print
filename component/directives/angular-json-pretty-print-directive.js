@@ -1,8 +1,8 @@
 (function() {
     jsonPrettyPrint.directive('rmJsonPrettyPrint',
-    [rmJsonPrettyPrintDirective]);
+    ['$timeout', rmJsonPrettyPrintDirective]);
 
-    function rmJsonPrettyPrintDirective() {
+    function rmJsonPrettyPrintDirective($timeout) {
 
         var _createBlank = function(){
             var jsonObject = {};
@@ -227,6 +227,8 @@
                 styles: '@'
             },
             link: function (scope, element, attrs, controller) {
+                var timer;
+
                 attrs.$observe("json", function (newValue) {
                     var defaultStyles = {
                         'braceColor': '#000000',
@@ -251,6 +253,31 @@
                     }
                   
                     scope.jsonPretty = _prettifyJson(newValue, styles);
+
+                    scope.timer = $timeout(function(){
+                        var i = element.find('i');
+
+                        i.on('click', function(event){
+                            var $ = angular.element,
+                                id = angular.element(event.target).prop('id'),
+                                line = $(element[0].querySelector('#' + id)),
+                                treeview = $(element[0].querySelectorAll('.json-treeview'));
+
+                            if($(event.target).hasClass('fa-plus-square-o')){
+                                $(line).removeClass('fa-plus-square-o');
+                                $(line).addClass('fa-minus-square-o');
+                                $($(treeview)[0].querySelectorAll('[data-id="' + id + '"]'))
+                                    .css('display', 'block');
+                            }
+                            else{
+                                $(line).removeClass('fa-minus-square-o');
+                                $(line).addClass('fa-plus-square-o');
+                                $($(treeview)[0].querySelectorAll('[data-id="' + id + '"]'))
+                                    .css('display', 'none');
+                            }
+                        });
+                    });
+
                 });
             }
         };
