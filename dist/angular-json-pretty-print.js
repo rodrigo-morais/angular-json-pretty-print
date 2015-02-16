@@ -262,11 +262,18 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 jsonObject.class = 'json-bracket';
                 jsonLine.elements.push(jsonObject);
 
+                blanks = blanks + 1;
+
                 json.forEach(function(item){
                     internalJsonLine = {
                         elements: [],
-                        lines: []
+                        lines: [],
+                        plusId: 'plus_' + plusId
+
                     };
+                    for(counter = 0; counter < blanks; counter = counter + 1){
+                        internalJsonLine.elements.push(_createBlank());
+                    }
                     internalJsonLine.elements.push(_createValue(item, styles, blanks, plusId));
                     jsonLine.lines.push(internalJsonLine);
                 });

@@ -514,7 +514,7 @@ describe('Unit test to print JSON object in pretty way', function() {
     firstLine = $(treeview).find('.json-new-line').first();
     internalNewLine = $(firstLine).find('.json-new-line').first();
     jsonElements = $(internalNewLine).children()[0];
-    arrayValue = $(jsonElements).children()[0];
+    arrayValue = $(jsonElements).children()[$(jsonElements).children().length - 1];
     
     expect($(arrayValue).text()).toBe("\"sub\"");
   });
