@@ -161,7 +161,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                     hasBraceClass = newValue[0].elements[newValue[0].elements.length - 1].class === 'json-brace';
                     hasBracketClass = newValue[0].elements[newValue[0].elements.length - 1].class === 'json-bracket';
                 }
-                
+
                 if(Array.isArray(newValue) && (hasBraceClass || hasBracketClass)){
                     var icon = newValue[0].elements[0],
                         openBrace = newValue[0].elements[newValue[0].elements.length - 1],
@@ -176,9 +176,11 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                         .elements
                         .push(openBrace);
 
-                    if(newValue[0].lines.length > 0){
-                        for(counter = 0; counter < internalBlanks; counter = counter + 1){
-                            newValue[0].lines[0].elements.unshift(_createBlank());
+                    if(hasBraceClass){
+                        if(newValue[0].lines.length > 0){
+                            for(counter = 0; counter < internalBlanks; counter = counter + 1){
+                                newValue[0].lines[0].elements.unshift(_createBlank());
+                            }
                         }
                     }
 
@@ -242,7 +244,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                     lines: []
                 },
                 jsonObject = {},
-                keysQtd = 0;
+                keysQtd = 0,
+                internalJsonLine;
 
                 jsonObject.id = 'plus_' + plusId;
                 jsonObject.isPlusIcon = true;
@@ -258,6 +261,15 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 jsonObject.style = 'color:' + styles.braceColor + '; background-color:' + styles.braceHighLightColor;
                 jsonObject.class = 'json-bracket';
                 jsonLine.elements.push(jsonObject);
+
+                json.forEach(function(item){
+                    internalJsonLine = {
+                        elements: [],
+                        lines: []
+                    };
+                    internalJsonLine.elements.push(_createValue(item, styles, blanks, plusId));
+                    jsonLine.lines.push(internalJsonLine);
+                });
 
                 jsonLines.push(jsonLine);
 

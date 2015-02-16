@@ -504,4 +504,19 @@ describe('Unit test to print JSON object in pretty way', function() {
     expect($(lastElement).text()).toBe('[');
   });
 
+  it('Verify if value of JSON object is an array then last element should be a bracket', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": [\"sub\"]}'></rm-json-pretty-print>")($rootScope),
+        treeview, firstLine, internalNewLine, jsonElements, arrayValue;
+    
+    $rootScope.$digest();
+
+    treeview = $(element).find('.json-treeview').first();
+    firstLine = $(treeview).find('.json-new-line').first();
+    internalNewLine = $(firstLine).find('.json-new-line').first();
+    jsonElements = $(internalNewLine).children()[0];
+    arrayValue = $(jsonElements).children()[0];
+    
+    expect($(arrayValue).text()).toBe("\"sub\"");
+  });
+
 });
