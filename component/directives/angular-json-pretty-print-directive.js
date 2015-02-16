@@ -59,6 +59,9 @@
             if(typeof value === 'string'){
                 return _createString(value, styles);
             }
+            else if(Array.isArray(value)){
+                return _createArray(value, styles, blanks, internalPlusId);
+            }
             else if(typeof value === 'object'){
                 return _createObject(value, styles, blanks, internalPlusId);
             }
@@ -117,7 +120,7 @@
                     lines: [],
                     plusId: 'plus_' + plusId
                 },
-                newValue, counter;
+                newValue, counter, hasBraceClass = false, hasBracketClass = false;
 
                 for(counter = 0; counter < blanks; counter = counter + 1){
                     internalLine.elements.push(_createBlank());
@@ -129,7 +132,12 @@
 
                 newValue = _createValue(json[key], styles, blanks, plusId);
 
-                if(Array.isArray(newValue) && newValue[0].elements[newValue[0].elements.length - 1].class === 'json-brace'){
+                if(newValue.length > 0){
+                    hasBraceClass = newValue[0].elements[newValue[0].elements.length - 1].class === 'json-brace';
+                    hasBracketClass = newValue[0].elements[newValue[0].elements.length - 1].class === 'json-bracket';
+                }
+                
+                if(Array.isArray(newValue) && (hasBraceClass || hasBracketClass)){
                     var icon = newValue[0].elements[0],
                         openBrace = newValue[0].elements[newValue[0].elements.length - 1],
                         closeBrace = newValue[1].elements[newValue[0].elements.length - 1],
@@ -143,8 +151,10 @@
                         .elements
                         .push(openBrace);
 
-                    for(counter = 0; counter < internalBlanks; counter = counter + 1){
-                        newValue[0].lines[0].elements.unshift(_createBlank());
+                    if(newValue[0].lines.length > 0){
+                        for(counter = 0; counter < internalBlanks; counter = counter + 1){
+                            newValue[0].lines[0].elements.unshift(_createBlank());
+                        }
                     }
 
                     internalLine.lines = internalLine
@@ -198,6 +208,49 @@
             jsonLines.push(jsonLine);        
 
             return jsonLines;
+        };
+
+        var _createArray = function(json, styles, blanks, plusId){
+            var jsonLines = [],
+                jsonLine = {
+                    elements: [],
+                    lines: []
+                },
+                jsonObject = {},
+                keysQtd = 0;
+
+                jsonObject.id = 'plus_' + plusId;
+                jsonObject.isPlusIcon = true;
+                jsonObject.element = '';
+                jsonObject.style = '';
+                jsonObject.class = 'plus-icon';
+                jsonLine.elements.push(jsonObject);
+                
+                jsonObject = {};
+                jsonObject.id = '';
+                jsonObject.isPlusIcon = false;
+                jsonObject.element = '[';
+                jsonObject.style = 'color:' + styles.braceColor + '; background-color:' + styles.braceHighLightColor;
+                jsonObject.class = 'json-bracket';
+                jsonLine.elements.push(jsonObject);
+
+                jsonLines.push(jsonLine);
+
+                jsonLine = {
+                    elements: [],
+                    lines: []
+                };
+                jsonObject = {};
+                jsonObject.id = '';
+                jsonObject.isPlusIcon = false;
+                jsonObject.isBlank = false;
+                jsonObject.element = ']';
+                jsonObject.style = 'color:' + styles.braceColor + '; background-color:' + styles.braceHighLightColor;
+                jsonObject.class = 'json-bracket';
+                jsonLine.elements.push(jsonObject);
+                jsonLines.push(jsonLine);        
+
+                return jsonLines;
         };
 
         var _prettifyJson = function(json, styles){

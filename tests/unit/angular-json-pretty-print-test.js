@@ -471,4 +471,37 @@ describe('Unit test to print JSON object in pretty way', function() {
 
     expect($(jsonElements).next().css('display')).toBe('none');
   });
+
+  it('Verify if value of JSON object is an array then element after two points should be a icon', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": [\"sub\"]}'></rm-json-pretty-print>")($rootScope),
+        firstLine, jsonElements, lastElement, twoPoints;
+    
+    $rootScope.$digest();
+
+    firstLine = $(element).find('.json-treeview').first().find('.json-new-line').first();
+    jsonElements = $(firstLine).children()[0];
+
+    $(jsonElements).children().each(function(index, element){
+      if($(element).hasClass('json-two-points')){
+        twoPoints = index;
+      }
+    });
+    
+    expect($(jsonElements).children()[twoPoints + 1].tagName).toBe('I');
+  });
+
+  it('Verify if value of JSON object is an array then last element should be a bracket', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": [\"sub\"]}'></rm-json-pretty-print>")($rootScope),
+        treeview, firstLine, jsonElements, lastElement;
+    
+    $rootScope.$digest();
+
+    treeview = $(element).find('.json-treeview').first();
+    firstLine = $(treeview).find('.json-new-line').first();
+    jsonElements = $(firstLine).children()[0];
+    lastElement = jsonElements.children[jsonElements.children.length - 1];
+    
+    expect($(lastElement).text()).toBe('[');
+  });
+
 });
