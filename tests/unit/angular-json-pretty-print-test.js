@@ -519,4 +519,19 @@ describe('Unit test to print JSON object in pretty way', function() {
     expect($(arrayValue).text()).toBe("\"sub\"");
   });
 
+  it('Verify when value of JSON object is an array and has more than one item if after first has a comma', function() {
+    var element = $compile("<rm-json-pretty-print json='{\"key1\": [\"sub1\",\"sub2\"]}'></rm-json-pretty-print>")($rootScope),
+        treeview, firstLine, internalNewLine, jsonElements, comma;
+    
+    $rootScope.$digest();
+
+    treeview = $(element).find('.json-treeview').first();
+    firstLine = $(treeview).find('.json-new-line').first();
+    internalNewLine = $(firstLine).find('.json-new-line').first();
+    jsonElements = $(internalNewLine).children()[0];
+    comma = $(jsonElements).children()[$(jsonElements).children().length - 1];
+    
+    expect($(comma).text()).toBe(",");
+  });
+
 });
