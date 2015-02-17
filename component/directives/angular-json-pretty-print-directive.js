@@ -219,7 +219,7 @@
                     lines: []
                 },
                 jsonObject = {},
-                keysQtd = 0,
+                valuesQtd = 0,
                 internalJsonLine;
 
                 jsonObject.id = 'plus_' + plusId;
@@ -238,8 +238,8 @@
                 jsonLine.elements.push(jsonObject);
 
                 blanks = blanks + 1;
-
-                json.forEach(function(item){
+                valuesQtd = json.length - 1;
+                json.forEach(function(item, index){
                     internalJsonLine = {
                         elements: [],
                         lines: [],
@@ -250,6 +250,11 @@
                         internalJsonLine.elements.push(_createBlank());
                     }
                     internalJsonLine.elements.push(_createValue(item, styles, blanks, plusId));
+
+                    if(index < valuesQtd){
+                        internalJsonLine.elements.push(_createComma());
+                    }
+
                     jsonLine.lines.push(internalJsonLine);
                 });
 

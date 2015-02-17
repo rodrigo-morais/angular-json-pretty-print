@@ -244,7 +244,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                     lines: []
                 },
                 jsonObject = {},
-                keysQtd = 0,
+                valuesQtd = 0,
                 internalJsonLine;
 
                 jsonObject.id = 'plus_' + plusId;
@@ -263,8 +263,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 jsonLine.elements.push(jsonObject);
 
                 blanks = blanks + 1;
-
-                json.forEach(function(item){
+                valuesQtd = json.length - 1;
+                json.forEach(function(item, index){
                     internalJsonLine = {
                         elements: [],
                         lines: [],
@@ -275,6 +275,11 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                         internalJsonLine.elements.push(_createBlank());
                     }
                     internalJsonLine.elements.push(_createValue(item, styles, blanks, plusId));
+
+                    if(index < valuesQtd){
+                        internalJsonLine.elements.push(_createComma());
+                    }
+
                     jsonLine.lines.push(internalJsonLine);
                 });
 
