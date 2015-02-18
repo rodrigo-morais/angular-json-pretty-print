@@ -112,7 +112,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             return jsonObject;
         };
 
-        var _addArrayToTreeview = function(json, values, blanks, plusId, internalLine){
+        var _addArrayToTreeview = function(json, values, blanks, parentPlusId, plusId, internalLine){
             var hasBraceClass = false, hasBracketClass = false,
                 counter, internalLines = [];
 
@@ -151,7 +151,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 internalLine = {
                     elements: [],
                     lines: [],
-                    plusId: 'plus_' + plusId
+                    plusId: 'plus_' + parentPlusId
                 };
 
                 for(counter = 0; counter < blanks; counter = counter + 1){
@@ -225,7 +225,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 }
                 newValue = _createValue(json[key], styles, blanks, internalPlusId);
 
-                lines = _addArrayToTreeview(json, newValue, blanks, plusId, internalLine);
+                lines = _addArrayToTreeview(json, newValue, blanks, plusId, internalPlusId, internalLine);
                 lines.forEach(function(line, lineIndex){
                     if(lineIndex === (lines.length - 1)){
                         internalLine = line;
@@ -234,60 +234,6 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                         jsonLine.lines.push(line);
                     }
                 });
-
-                /*if(newValue.length > 0){
-                    hasBraceClass = newValue[0].elements[newValue[0].elements.length - 1].class === 'json-brace';
-                    hasBracketClass = newValue[0].elements[newValue[0].elements.length - 1].class === 'json-bracket';
-                }
-
-                if(Array.isArray(newValue) && (hasBraceClass || hasBracketClass)){
-                    var icon = newValue[0].elements[0],
-                        openBrace = newValue[0].elements[newValue[0].elements.length - 1],
-                        internalBlanks = blanks + 1;
-
-                    internalLine
-                        .elements
-                        .push(icon);
-
-                    internalLine
-                        .elements
-                        .push(openBrace);
-
-                    if(hasBraceClass){
-                        if(newValue[0].lines.length > 0){
-                            for(counter = 0; counter < internalBlanks; counter = counter + 1){
-                                newValue[0].lines[0].elements.unshift(_createBlank());
-                            }
-                        }
-                    }
-
-                    internalLine.lines = internalLine
-                                                .lines
-                                                .concat(newValue[0].lines);
-
-                    jsonLine.lines.push(internalLine);
-
-                    internalLine = {
-                        elements: [],
-                        lines: [],
-                        plusId: 'plus_' + plusId
-                    };
-
-                    for(counter = 0; counter < blanks; counter = counter + 1){
-                        internalLine.elements.push(_createBlank());
-                    }
-
-                    newValue[1].elements.forEach(function (element) {
-                        internalLine
-                            .elements
-                            .push(element);
-                    });
-                }
-                else{
-                    internalLine
-                        .elements
-                        .push(newValue);
-                }*/
 
                 if(index < keysQtd){
                     internalLine.elements.push(_createComma());
@@ -323,7 +269,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 },
                 jsonObject = {},
                 valuesQtd = 0,
-                internalJsonLine;
+                internalJsonLine,
+                internalPlusId = plusId;
 
                 jsonObject.id = 'plus_' + plusId;
                 jsonObject.isPlusIcon = true;
@@ -343,6 +290,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 blanks = blanks + 1;
                 valuesQtd = json.length - 1;
                 json.forEach(function(item, index){
+                    var newValue, lines;
+
                     internalJsonLine = {
                         elements: [],
                         lines: [],
@@ -352,7 +301,21 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                     for(counter = 0; counter < blanks; counter = counter + 1){
                         internalJsonLine.elements.push(_createBlank());
                     }
-                    internalJsonLine.elements.push(_createValue(item, styles, blanks, plusId));
+                    newValue = _createValue(item, styles, blanks, plusId);
+
+                    if(newValue.length > 0){
+                        internalPlusId = internalPlusId + 1;
+                    }
+
+                    lines = _addArrayToTreeview(json, newValue, blanks, plusId, internalPlusId, internalJsonLine);
+                    lines.forEach(function(line, lineIndex){
+                        if(lineIndex === (lines.length - 1)){
+                            internalJsonLine = line;
+                        }
+                        else{
+                            jsonLine.lines.push(line);
+                        }
+                    });
 
                     if(index < valuesQtd){
                         internalJsonLine.elements.push(_createComma());
