@@ -119,7 +119,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                     lines: []
                 },
                 jsonObject = {},
-                keysQtd = 0;
+                keysQtd = 0,
+                internalPlusId = plusId;
 
             jsonObject.id = 'plus_' + plusId;
             jsonObject.isPlusIcon = true;
@@ -144,7 +145,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                     lines: [],
                     plusId: 'plus_' + plusId
                 },
-                newValue, counter, hasBraceClass = false, hasBracketClass = false;
+                newValue, counter,
+                hasBraceClass = false, hasBracketClass = false;
 
                 for(counter = 0; counter < blanks; counter = counter + 1){
                     internalLine.elements.push(_createBlank());
@@ -155,9 +157,9 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 internalLine.elements.push(_createTwoPoints());
 
                 if(typeof json[key] === 'object' || Array.isArray(json[key])){
-                    plusId = plusId + 1;
+                    internalPlusId = internalPlusId + 1;
                 }
-                newValue = _createValue(json[key], styles, blanks, plusId);
+                newValue = _createValue(json[key], styles, blanks, internalPlusId);
 
                 if(newValue.length > 0){
                     hasBraceClass = newValue[0].elements[newValue[0].elements.length - 1].class === 'json-brace';
@@ -167,7 +169,6 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 if(Array.isArray(newValue) && (hasBraceClass || hasBracketClass)){
                     var icon = newValue[0].elements[0],
                         openBrace = newValue[0].elements[newValue[0].elements.length - 1],
-                        closeBrace = newValue[1].elements[newValue[0].elements.length - 1],
                         internalBlanks = blanks + 1;
 
                     internalLine
@@ -194,7 +195,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
                     internalLine = {
                         elements: [],
-                        lines: []
+                        lines: [],
+                        plusId: 'plus_' + plusId
                     };
 
                     for(counter = 0; counter < blanks; counter = counter + 1){
@@ -289,7 +291,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
 
                 jsonLine = {
                     elements: [],
-                    lines: []
+                    lines: [],
+                    plusId: 'plus_' + plusId
                 };
                 jsonObject = {};
                 jsonObject.id = '';
