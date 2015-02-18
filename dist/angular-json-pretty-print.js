@@ -134,14 +134,6 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                     .elements
                     .push(openBrace);
 
-                if(hasBraceClass){
-                    if(values[0].lines.length > 0){
-                        for(counter = 0; counter < internalBlanks; counter = counter + 1){
-                            values[0].lines[0].elements.unshift(_createBlank());
-                        }
-                    }
-                }
-
                 internalLine.lines = internalLine
                                             .lines
                                             .concat(values[0].lines);
