@@ -112,6 +112,19 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             return jsonObject;
         };
 
+        var _increasePlusId = function(value, plusId){
+            if(value){
+                plusId = plusId + 1;
+                if(value.lines){
+                    value.lines.forEach(function(line){        
+                        plusId = _increasePlusId(line.elements, plusId);
+                    });
+                }
+            }
+
+            return plusId;
+        };
+
         var _addArrayToTreeview = function(json, values, blanks, parentPlusId, plusId, internalLine){
             var hasBraceClass = false, hasBracketClass = false,
                 counter, internalLines = [];
@@ -226,6 +239,16 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                         jsonLine.lines.push(line);
                     }
                 });
+
+                if(newValue.length > 0){
+                    newValue.forEach(function(value){
+                        if(value.lines && value.lines){
+                            value.lines.forEach(function(lineValue){
+                                internalPlusId = _increasePlusId(lineValue, internalPlusId);
+                            });
+                        }
+                    });
+                }
 
                 if(index < keysQtd){
                     internalLine.elements.push(_createComma());
