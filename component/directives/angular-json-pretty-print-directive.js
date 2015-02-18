@@ -87,6 +87,19 @@
             return jsonObject;
         };
 
+        var _increasePlusId = function(value, plusId){
+            if(value){
+                plusId = plusId + 1;
+                if(value.lines){
+                    value.lines.forEach(function(line){        
+                        plusId = _increasePlusId(line.elements, plusId);
+                    });
+                }
+            }
+
+            return plusId;
+        };
+
         var _addArrayToTreeview = function(json, values, blanks, parentPlusId, plusId, internalLine){
             var hasBraceClass = false, hasBracketClass = false,
                 counter, internalLines = [];
@@ -108,14 +121,6 @@
                 internalLine
                     .elements
                     .push(openBrace);
-
-                if(hasBraceClass){
-                    if(values[0].lines.length > 0){
-                        for(counter = 0; counter < internalBlanks; counter = counter + 1){
-                            values[0].lines[0].elements.unshift(_createBlank());
-                        }
-                    }
-                }
 
                 internalLine.lines = internalLine
                                             .lines
@@ -210,6 +215,16 @@
                     }
                 });
 
+                if(newValue.length > 0){
+                    newValue.forEach(function(value){
+                        if(value.lines && value.lines){
+                            value.lines.forEach(function(lineValue){
+                                internalPlusId = _increasePlusId(lineValue, internalPlusId);
+                            });
+                        }
+                    });
+                }
+
                 if(index < keysQtd){
                     internalLine.elements.push(_createComma());
                 }
@@ -276,11 +291,12 @@
                     for(counter = 0; counter < blanks; counter = counter + 1){
                         internalJsonLine.elements.push(_createBlank());
                     }
-                    newValue = _createValue(item, styles, blanks, plusId);
 
-                    if(newValue.length > 0){
+                    if(typeof item === 'object' || Array.isArray(item)){
                         internalPlusId = internalPlusId + 1;
                     }
+
+                    newValue = _createValue(item, styles, blanks, internalPlusId);
 
                     lines = _addArrayToTreeview(json, newValue, blanks, plusId, internalPlusId, internalJsonLine);
                     lines.forEach(function(line, lineIndex){
@@ -291,6 +307,16 @@
                             jsonLine.lines.push(line);
                         }
                     });
+
+                    if(newValue.length > 0){
+                        newValue.forEach(function(value){
+                            if(value.lines && value.lines){
+                                value.lines.forEach(function(lineValue){
+                                    internalPlusId = _increasePlusId(lineValue, internalPlusId);
+                                });
+                            }
+                        });
+                    }
 
                     if(index < valuesQtd){
                         internalJsonLine.elements.push(_createComma());
