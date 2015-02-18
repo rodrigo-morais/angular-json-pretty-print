@@ -112,6 +112,69 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             return jsonObject;
         };
 
+        var _addArrayToTreeview = function(json, values, blanks, plusId, internalLine){
+            var hasBraceClass = false, hasBracketClass = false,
+                counter, internalLines = [];
+
+            if(values.length > 0){
+                hasBraceClass = values[0].elements[values[0].elements.length - 1].class === 'json-brace';
+                hasBracketClass = values[0].elements[values[0].elements.length - 1].class === 'json-bracket';
+            }
+
+            if(hasBraceClass || hasBracketClass){
+                var icon = values[0].elements[0],
+                    openBrace = values[0].elements[values[0].elements.length - 1],
+                    internalBlanks = blanks + 1;
+
+                internalLine
+                    .elements
+                    .push(icon);
+
+                internalLine
+                    .elements
+                    .push(openBrace);
+
+                if(hasBraceClass){
+                    if(values[0].lines.length > 0){
+                        for(counter = 0; counter < internalBlanks; counter = counter + 1){
+                            values[0].lines[0].elements.unshift(_createBlank());
+                        }
+                    }
+                }
+
+                internalLine.lines = internalLine
+                                            .lines
+                                            .concat(values[0].lines);
+
+                internalLines.push(internalLine);
+
+                internalLine = {
+                    elements: [],
+                    lines: [],
+                    plusId: 'plus_' + plusId
+                };
+
+                for(counter = 0; counter < blanks; counter = counter + 1){
+                    internalLine.elements.push(_createBlank());
+                }
+
+                values[1].elements.forEach(function (element) {
+                    internalLine
+                        .elements
+                        .push(element);
+                });
+            }
+            else{
+                internalLine
+                    .elements
+                    .push(values);
+            }
+
+            internalLines.push(internalLine);
+
+            return internalLines;
+        };
+
         var _createObject = function(json, styles, blanks, plusId){
             var jsonLines = [],
                 jsonLine = {
@@ -146,7 +209,8 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                     plusId: 'plus_' + plusId
                 },
                 newValue, counter,
-                hasBraceClass = false, hasBracketClass = false;
+                hasBraceClass = false, hasBracketClass = false,
+                lines;
 
                 for(counter = 0; counter < blanks; counter = counter + 1){
                     internalLine.elements.push(_createBlank());
@@ -161,7 +225,17 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                 }
                 newValue = _createValue(json[key], styles, blanks, internalPlusId);
 
-                if(newValue.length > 0){
+                lines = _addArrayToTreeview(json, newValue, blanks, plusId, internalLine);
+                lines.forEach(function(line, lineIndex){
+                    if(lineIndex === (lines.length - 1)){
+                        internalLine = line;
+                    }
+                    else{
+                        jsonLine.lines.push(line);
+                    }
+                });
+
+                /*if(newValue.length > 0){
                     hasBraceClass = newValue[0].elements[newValue[0].elements.length - 1].class === 'json-brace';
                     hasBracketClass = newValue[0].elements[newValue[0].elements.length - 1].class === 'json-bracket';
                 }
@@ -213,7 +287,7 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
                     internalLine
                         .elements
                         .push(newValue);
-                }
+                }*/
 
                 if(index < keysQtd){
                     internalLine.elements.push(_createComma());
