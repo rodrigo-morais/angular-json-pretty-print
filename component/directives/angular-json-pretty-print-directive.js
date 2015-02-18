@@ -291,11 +291,12 @@
                     for(counter = 0; counter < blanks; counter = counter + 1){
                         internalJsonLine.elements.push(_createBlank());
                     }
-                    newValue = _createValue(item, styles, blanks, plusId);
 
-                    if(newValue.length > 0){
+                    if(typeof item === 'object' || Array.isArray(item)){
                         internalPlusId = internalPlusId + 1;
                     }
+
+                    newValue = _createValue(item, styles, blanks, internalPlusId);
 
                     lines = _addArrayToTreeview(json, newValue, blanks, plusId, internalPlusId, internalJsonLine);
                     lines.forEach(function(line, lineIndex){
@@ -306,6 +307,16 @@
                             jsonLine.lines.push(line);
                         }
                     });
+
+                    if(newValue.length > 0){
+                        newValue.forEach(function(value){
+                            if(value.lines && value.lines){
+                                value.lines.forEach(function(lineValue){
+                                    internalPlusId = _increasePlusId(lineValue, internalPlusId);
+                                });
+                            }
+                        });
+                    }
 
                     if(index < valuesQtd){
                         internalJsonLine.elements.push(_createComma());
