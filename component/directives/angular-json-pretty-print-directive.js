@@ -58,6 +58,9 @@
             if(typeof value === 'string'){
                 return _createString(value, styles);
             }
+            if(value === null){
+                return _createString('null', styles);
+            }
             else if(Array.isArray(value)){
                 return _createArray(value, styles, blanks, plusId);
             }
