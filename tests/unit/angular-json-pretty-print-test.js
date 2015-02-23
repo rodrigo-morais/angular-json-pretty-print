@@ -534,4 +534,31 @@ describe('Unit test to print JSON object in pretty way', function() {
     expect($(comma).text()).toBe(",");
   });
 
+  it('Verify if first element is a bracket', function() {
+    var element = $compile("<rm-json-pretty-print json='[{\"key1\": \"value1\"},{\"key2\": \"value2\"}]'></rm-json-pretty-print>")($rootScope),
+        firstElement;
+    
+    $rootScope.$digest();
+
+    firstElement = $(element).find('span').first();
+    
+    expect($(firstElement).hasClass('json-bracket')).toBe(true);
+  });
+
+  it('Verify if there are two objects into array', function() {
+    var element = $compile("<rm-json-pretty-print json='[{\"key1\": \"value1\"},{\"key2\": \"value2\"}]'></rm-json-pretty-print>")($rootScope);
+    
+    $rootScope.$digest();
+    
+    expect($(element).find('.json-brace').length).toBe(4);
+  });
+
+  it('Verify if scope has array with two lines to open object and two lines to close', function() {
+    var element = $compile("<rm-json-pretty-print json='[{\"key1\": \"value1\"},{\"key2\": \"value2\"}]'></rm-json-pretty-print>")($rootScope);
+    
+    $rootScope.$digest();
+    
+    expect(element.isolateScope().jsonPretty[0].lines.length).toBe(4);
+  });
+
 });

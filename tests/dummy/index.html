@@ -18,8 +18,12 @@
             <div style="position: relative; float: right; width: 30%; height: 20%;; margin-bottom: 2%;">
                 <textarea id="styles" style="position: relative; float: left; clear: none; display: inline; width:100%; height: 100%; margin-right: 2%;">{{styles}}</textarea>
             </div>
-            <h2>Pretty JSON</h2>
+            <h2>Pretty JSON - With options</h2>
             <rm-json-pretty-print json="{{jsonValue}}" styles="{{styles}}">
+            </rm-json-pretty-print>
+
+            <h2>Pretty JSON - Satndard options</h2>
+            <rm-json-pretty-print json="{{jsonValue}}">
             </rm-json-pretty-print>
         </div>
         <script src="vendor/angular/angular.js"></script>

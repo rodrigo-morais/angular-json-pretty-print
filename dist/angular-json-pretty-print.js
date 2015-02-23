@@ -374,13 +374,15 @@ angular.module('JsonPrettyPrint').run(['$templateCache', function($templateCache
             var jsonObject = JSON.parse(json),
                 jsonLines = [],
                 blanks = 0,
-                plusId = 0;
+                plusId = 0,
+                _jsonLines = [];
 
             if(Array.isArray(jsonObject)){
-
+                _jsonLines = _createArray(jsonObject, styles, blanks, plusId);
+                jsonLines = jsonLines.concat(_jsonLines);
             }
             else{
-                var _jsonLines = _createObject(jsonObject, styles, blanks, plusId);
+                _jsonLines = _createObject(jsonObject, styles, blanks, plusId);
                 jsonLines = jsonLines.concat(_jsonLines);
             }
 
