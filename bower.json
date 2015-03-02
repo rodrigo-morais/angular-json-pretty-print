@@ -1,10 +1,14 @@
 {
   "name": "angular-json-pretty-print",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "homepage": "",
   "authors": [
     "Rodrigo Morais"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rodrigo-morais/angular-json-pretty-print.git"
+  },
   "description": "Angular component to print in pretty way a JSON object and can navigate in it.",
   "main": "./dist/angular-json-pretty-print.js",
   "keywords": [
