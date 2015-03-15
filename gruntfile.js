@@ -116,4 +116,17 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-angular-templates');
     grunt.registerTask('default', 'watch');
     grunt.registerTask('all', ['concat']);
+    grunt.registerTask('ci',
+        [
+            'jshint',
+            'ngtemplates',
+            'concat',
+            'uglify',
+            'copy:main',
+            'copy:css',
+            'copy:fontawesomeFonts',
+            'copy:fontawesomeCss',
+            'copy:dummy'
+        ]
+    );
 };
