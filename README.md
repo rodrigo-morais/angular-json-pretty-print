@@ -1,6 +1,8 @@
 # angular-json-pretty-print
 This component should be use to print the JSON object or JSON text in pretty way. With this component is possible to change the color in each type of element within of JSON object and expand and retract objects and arrays.
 
+[![Build Status](https://travis-ci.org/rodrigo-morais/angular-json-pretty-print.svg?branch=master)](https://travis-ci.org/rodrigo-morais/angular-json-pretty-print)
+
 ## Installation
 
 To install witn Bower:
