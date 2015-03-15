@@ -3,7 +3,7 @@
 module.exports = function(config) {
     'use strict';
     var bower = 'vendor/';
-    config.set({
+    var configuration = {
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch: true,
         // base path, that will be used to resolve files and exclude
@@ -16,7 +16,13 @@ module.exports = function(config) {
         // - Safari (only Mac)
         // - PhantomJS
         // - IE (only Windows)
-        browsers: ['PhantomJS'],
+        browsers: ['Chrome', 'ChromeCanary'],
+        customLaunchers: {
+          Chrome_travis_ci: {
+            base: 'Chrome',
+            flags: ['--no-sandbox']
+          }
+        },
         // list of files / patterns to load in the browser
         files: [
             bower + 'angular/angular.js',
@@ -49,5 +55,11 @@ module.exports = function(config) {
             type : 'lcov',
             dir : 'coverage/'
         }
-    });
+    };
+
+    if(process.env.TRAVIS){
+        configuration.browsers = ['Chrome_travis_ci'];
+    }
+
+    config.set(configuration);
 };
